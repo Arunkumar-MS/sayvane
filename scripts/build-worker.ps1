@@ -5,11 +5,12 @@
   src-tauri\binaries\sayvane-speech-<target>.exe
 
 .PARAMETER Target
-  Target triple: x86_64-pc-windows-msvc (default) or aarch64-pc-windows-msvc
-  (Windows on ARM; build it on an ARM64 machine with the MSVC ARM64 tools).
+  Target triple: x86_64-pc-windows-msvc (default), i686-pc-windows-msvc (32-bit
+  Windows) or aarch64-pc-windows-msvc (Windows on ARM; build it on an ARM64 machine
+  with the MSVC ARM64 tools).
 
 .PARAMETER CpuLevel
-  x86-64 instruction level compiled into the engine (ignored for ARM64):
+  x86-64 instruction level compiled into the engine (x86 and x64 targets; ignored for ARM64):
     sse42  (default) conservative, runs on practically every Windows 10 x64 PC
     avx2   Haswell (2013+) and newer; faster, refuses to run on older CPUs
     native build-machine tuning, never ship
@@ -35,8 +36,9 @@ Set-StrictMode -Version Latest
 
 $Arch = switch ($Target) {
     "x86_64-pc-windows-msvc"  { @{ Generator = "x64";   Machine = 0x8664; Label = "x64" } }
+    "i686-pc-windows-msvc"    { @{ Generator = "Win32"; Machine = 0x014C; Label = "x86 (32-bit)" } }
     "aarch64-pc-windows-msvc" { @{ Generator = "ARM64"; Machine = 0xAA64; Label = "ARM64" } }
-    default { throw "Unsupported target '$Target' (expected x86_64-pc-windows-msvc or aarch64-pc-windows-msvc)." }
+    default { throw "Unsupported target '$Target' (expected x86_64-pc-windows-msvc, i686-pc-windows-msvc or aarch64-pc-windows-msvc)." }
 }
 
 $Root = Resolve-Path (Join-Path $PSScriptRoot "..")
@@ -62,7 +64,7 @@ $cfg = @(
     "-S", $Src, "-B", $BuildDir,
     "-A", $Arch.Generator
 )
-if ($Arch.Generator -eq "x64") {
+if ($Arch.Generator -ne "ARM64") {
     $cfg += "-DSAYVANE_X86_LEVEL=$CpuLevel"
 }
 if ($env:SAYVANE_ENGINE_TARBALL) {

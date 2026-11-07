@@ -88,6 +88,14 @@ jobs:
             arch: x64
             pe: x64
             asset: Sayvane-Windows-x64-Setup.exe
+          # 32-bit Windows 10. Built on the x64 runner, which also runs the 32-bit tests.
+          - name: Windows x86 (32-bit)
+            runner: windows-2022
+            target: i686-pc-windows-msvc
+            bundles: nsis
+            arch: x86
+            pe: x86
+            asset: Sayvane-Windows-x86-Setup.exe
           # Native ARM64 runner: the real-model smoke test below runs on ARM hardware.
           - name: Windows ARM64
             runner: windows-11-arm
@@ -272,6 +280,7 @@ jobs:
           | Mac, Apple Silicon (M1 and later) | `Sayvane-macOS-AppleSilicon.dmg` |
           | Mac, Intel | `Sayvane-macOS-Intel.dmg` |
           | Windows 10 22H2 / 11, 64 bit (Intel or AMD) | `Sayvane-Windows-x64-Setup.exe` |
+          | Windows 10 22H2, 32 bit | `Sayvane-Windows-x86-Setup.exe` |
           | Windows 11 on ARM (Snapdragon and similar) | `Sayvane-Windows-ARM64-Setup.exe` |
 
           Verify a download against `SHA256SUMS.txt`. The source code is `Sayvane-source.zip`.

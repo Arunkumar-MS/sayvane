@@ -70,6 +70,10 @@ string(TOLOWER "${SAYVANE_ARCH}" SAYVANE_ARCH)
 if(SAYVANE_ARCH MATCHES "^(x86_64|amd64|x64)$")
     set(SAYVANE_IS_X86 ON)
     set(SAYVANE_ARCH_NAME "x86_64")
+elseif(SAYVANE_ARCH MATCHES "^(x86|i386|i686|win32)$")
+    # 32-bit Windows (-A Win32). Same instruction policy as x86-64 (SSE4.2 by default).
+    set(SAYVANE_IS_X86 ON)
+    set(SAYVANE_ARCH_NAME "x86")
 elseif(SAYVANE_ARCH MATCHES "^(arm64|aarch64)$")
     set(SAYVANE_IS_X86 OFF)
     set(SAYVANE_ARCH_NAME "aarch64")
@@ -217,6 +221,12 @@ endif()
 
 find_package(Threads REQUIRED)
 target_link_libraries(sayvane-speech PRIVATE Threads::Threads)
+
+if(MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 4)
+    # A 32-bit process gets 2 GB of address space by default; this allows up to 4 GB on
+    # 64-bit Windows so the small speech models fit comfortably.
+    target_link_options(sayvane-speech PRIVATE /LARGEADDRESSAWARE)
+endif()
 
 if(MSVC)
     target_compile_options(sayvane-speech PRIVATE /W4 /utf-8 /EHsc)

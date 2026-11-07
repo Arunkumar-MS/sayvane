@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Check that Windows executables are built for the expected CPU.
 
-Usage: check-pe-arch.py <x64|arm64> <file.exe> [more files...]
+Usage: check-pe-arch.py <x86|x64|arm64> <file.exe> [more files...]
 
 Reads the PE header directly, so it works in any shell and needs no extra tools.
 """
 import struct
 import sys
 
-MACHINES = {"x64": 0x8664, "arm64": 0xAA64}
+MACHINES = {"x86": 0x014C, "x64": 0x8664, "arm64": 0xAA64}
 
 
 def machine_of(path):

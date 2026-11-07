@@ -3,7 +3,7 @@
 // tagged unions use `kind`). Change both sides together.
 
 export type Os = "macos" | "windows" | "other";
-export type Arch = "aarch64" | "x86_64" | "other";
+export type Arch = "aarch64" | "x86_64" | "x86" | "other";
 
 export interface Brand {
   displayName: string;

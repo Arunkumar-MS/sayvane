@@ -180,7 +180,7 @@ your clipboard or another app.
 | macOS integration | Accessibility API, CGEvent tap, NSPasteboard, NSPanel |
 | Windows integration | UI Automation, SendInput, Win32 clipboard |
 | Storage | SQLite (WAL) with versioned migrations, atomic file writes |
-| CI | GitHub Actions on native runners for Apple Silicon, Intel Mac, Windows x64 and Windows ARM64 |
+| CI | GitHub Actions on native runners for Apple Silicon, Intel Mac, Windows x64, x86 and ARM64 |
 
 ## Project layout
 
@@ -226,6 +226,7 @@ saved keys.
 | macOS Intel | ✅ Builds, runs, tested on real hardware |
 | macOS Apple Silicon | 🟡 Built by CI on every push; needs hands-on testing |
 | Windows x64 | 🟡 Built by CI on every push; needs hands-on testing |
+| Windows x86 (32-bit) | 🟡 Built by CI; the 1.6 GB model cannot load in a 32-bit process (tiny, base and small work); needs hands-on testing |
 | Windows ARM64 | 🟡 Built natively by CI on an ARM64 runner (worker smoke test runs there); needs hands-on testing on a real device |
 
 See [`docs/compatibility.md`](docs/compatibility.md) for the full test matrix. Hands-on

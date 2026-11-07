@@ -3,7 +3,7 @@
 // -mavx2 etc. when SAYVANE_X86_LEVEL=avx2) is only reached after this check.
 #include "cpu_check.h"
 
-#if defined(__x86_64__) || defined(_M_X64)
+#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
 #define SAYVANE_X86 1
 #if defined(_MSC_VER)
 #include <intrin.h>

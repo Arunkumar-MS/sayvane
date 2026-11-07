@@ -10,6 +10,7 @@ compilation alone are listed separately and never counted as hardware verificati
 | macOS Intel (`x86_64-apple-darwin`) | Built, 61/61 smoke checks with real model | Built and launched (dev) | Intel MacBook, macOS 15.7, 8 GB |
 | macOS Apple Silicon (`aarch64-apple-darwin`) | Cross-compiled only (old SDK); Metal not run | Not built | CI job `macOS Apple Silicon` (pending first push) |
 | Windows x64 (`x86_64-pc-windows-msvc`) | Built and smoke tested in CI (real model) | Built in CI | GitHub Actions `windows-2022` |
+| Windows x86, 32-bit (`i686-pc-windows-msvc`) | Built and smoke tested in CI (real model, 32-bit worker on the x64 runner) | Built in CI | GitHub Actions `windows-2022`; not run on a 32-bit Windows install. Largest model does not fit in 32-bit memory |
 | Windows ARM64 (`aarch64-pc-windows-msvc`) | Built natively and smoke tested in CI (real model, ARM64 runner) | Built in CI | GitHub Actions `windows-11-arm`; not run on a physical device |
 
 Decisions that affect support:
@@ -35,26 +36,26 @@ Decisions that affect support:
 
 Fill in on each machine before a release. Only the first rows have been observed.
 
-| Scenario | Apple Silicon | Intel Mac | Windows x64 | Windows ARM64 |
-| --- | --- | --- | --- | --- |
-| Launch from dev build; main window, tray, floating bar present | — | Observed | — | — |
-| Floating bar at floating level, bottom-center above Dock | — | Observed | — | — |
-| Install and launch without development dependencies | — | — | — | — |
-| Local recognition with network disconnected | — | — | — | — |
-| Platform shortcut and configurable alternative | — | — | — | — |
-| Non-activating floating bar (focus stays in target) | — | — | — | — |
-| Browser / native editor / Electron insertion | — | — | — | — |
-| Unicode and multiline insertion; selection replacement | — | — | — | — |
-| App or window change during recognition | — | — | — | — |
-| Password field and ineligible target | — | — | — | — |
-| Copy during delayed clipboard restore | — | — | — | — |
-| Multiple displays and scale changes | — | — | — | — |
-| Microphone denial and device unplug | — | — | — | — |
-| Sleep or lock during recording | — | — | — | — |
-| Crash recovery and explicit retry | — | — | — | — |
-| OpenRouter success and offline fallback | — | — | — | — |
-| Custom compatible and loopback profile | — | — | — | — |
-| Elevated destination and secure desktop | n/a | n/a | — | — |
+| Scenario | Apple Silicon | Intel Mac | Windows x64 | Windows ARM64 | Windows x86 |
+| --- | --- | --- | --- | --- | --- |
+| Launch from dev build; main window, tray, floating bar present | — | Observed | — | — | — |
+| Floating bar at floating level, bottom-center above Dock | — | Observed | — | — | — |
+| Install and launch without development dependencies | — | — | — | — | — |
+| Local recognition with network disconnected | — | — | — | — | — |
+| Platform shortcut and configurable alternative | — | — | — | — | — |
+| Non-activating floating bar (focus stays in target) | — | — | — | — | — |
+| Browser / native editor / Electron insertion | — | — | — | — | — |
+| Unicode and multiline insertion; selection replacement | — | — | — | — | — |
+| App or window change during recognition | — | — | — | — | — |
+| Password field and ineligible target | — | — | — | — | — |
+| Copy during delayed clipboard restore | — | — | — | — | — |
+| Multiple displays and scale changes | — | — | — | — | — |
+| Microphone denial and device unplug | — | — | — | — | — |
+| Sleep or lock during recording | — | — | — | — | — |
+| Crash recovery and explicit retry | — | — | — | — | — |
+| OpenRouter success and offline fallback | — | — | — | — | — |
+| Custom compatible and loopback profile | — | — | — | — | — |
+| Elevated destination and secure desktop | n/a | n/a | — | — | — |
 
 ## Known gaps
 

@@ -28,6 +28,7 @@ pub fn platform_info() -> Platform {
     let arch = match std::env::consts::ARCH {
         "aarch64" => "aarch64",
         "x86_64" => "x86_64",
+        "x86" => "x86",
         _ => "other",
     };
     Platform { os: os.into(), arch: arch.into(), os_version: os_version() }
