@@ -8,53 +8,123 @@
   const map = (v, a, b) => clamp((v - a) / (b - a));
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-  // ---------- OS aware download label ----------
+  // ---------- Smart download ----------
+  // One click gets the right installer when the device can be identified. When it
+  // cannot (Safari hides the Mac chip; Firefox cannot tell Intel from ARM on Windows),
+  // a small chooser opens in place instead of sending people down the page.
+  const TARGETS = {
+    "mac-arm": { os: "mac", name: "Mac · Apple Silicon", note: "M1, M2, M3, M4 and later", href: "/download/mac-arm" },
+    "mac-intel": { os: "mac", name: "Mac · Intel", note: "Macs with an Intel processor", href: "/download/mac-intel" },
+    "win-x64": { os: "windows", name: "Windows · 64-bit", note: "Intel or AMD · Windows 10 or 11", href: "/download/windows" },
+    "win-arm": { os: "windows", name: "Windows · ARM64", note: "Snapdragon and similar · Windows 11", href: "/download/windows-arm" },
+    "win-x86": { os: "windows", name: "Windows · 32-bit", note: "Older PCs · Windows 10", href: "/download/windows-x86" },
+  };
+  const TIPS = {
+    mac: 'Not sure? Open the Apple menu, then About This Mac. "Chip" means Apple Silicon; "Processor" means Intel.',
+    windows: 'Not sure? Open Settings, System, About, and look at "System type".',
+  };
   const ua = navigator.userAgent;
-  const os = /Windows/i.test(ua) ? "windows" : /Mac OS X|Macintosh/i.test(ua) && !/iPhone|iPad/i.test(ua) ? "mac" : null;
-  if (os) {
+  const os = /Android|iPhone|iPad|iPod/i.test(ua) || (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1)
+    ? "mobile"
+    : /Windows/i.test(ua) ? "windows"
+    : /Mac OS X|Macintosh/i.test(ua) ? "mac"
+    : null;
+
+  async function detectTarget() {
+    let hints = null;
+    try {
+      hints = await navigator.userAgentData?.getHighEntropyValues?.(["architecture", "bitness"]);
+    } catch {}
+    if (os === "windows") {
+      if (hints?.architecture === "arm") return "win-arm";
+      if (hints?.architecture === "x86") return hints.bitness === "32" ? "win-x86" : "win-x64";
+      // Firefox and Safari: only a 32-bit Windows omits the 64-bit tokens. A 64-bit token
+      // could be x64 or ARM64, so that case is left for the person to choose.
+      if (!hints && !/Win64|WOW64|x64|ARM64|AMD64/i.test(ua)) return "win-x86";
+      return null;
+    }
+    if (os === "mac") {
+      if (hints?.architecture === "arm") return "mac-arm";
+      if (hints?.architecture === "x86") return "mac-intel";
+      try {
+        const gl = document.createElement("canvas").getContext("webgl");
+        const ext = gl?.getExtension("WEBGL_debug_renderer_info");
+        const gpu = ext ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : "";
+        if (/Apple M\d/i.test(gpu)) return "mac-arm";
+        if (/Intel|AMD|Radeon|NVIDIA/i.test(gpu)) return "mac-intel";
+      } catch {}
+    }
+    return null;
+  }
+
+  const ctas = [...document.querySelectorAll("[data-os-cta]")];
+  const captions = [...document.querySelectorAll("[data-dl-caption]")];
+  let detected = null;
+  let dialog = null;
+
+  function buildDialog() {
+    dialog = document.createElement("dialog");
+    dialog.className = "dl-dialog";
+    dialog.setAttribute("aria-labelledby", "dl-title");
+    dialog.addEventListener("click", (e) => { if (e.target === dialog) dialog.close(); });
+    document.body.append(dialog);
+  }
+
+  function openChooser() {
+    if (!dialog) buildDialog();
+    const groups = os === "mac" ? ["mac"] : os === "windows" ? ["windows"] : ["mac", "windows"];
+    const title = os === "mac" ? "Which Mac do you have?" : os === "windows" ? "Which Windows PC do you have?" : "Download Sayvane";
+    const intro = os === "mobile"
+      ? "Sayvane is a desktop app for Mac and Windows. Open this page on your computer to download it, or pick a version below."
+      : os === null ? "Sayvane is a desktop app for Mac and Windows." : "";
+    const names = { mac: "Mac", windows: "Windows" };
+    const sections = groups.map((g) => {
+      const items = Object.entries(TARGETS).filter(([, t]) => t.os === g).map(([key, t]) =>
+        `<a class="dl-option${key === detected ? " is-yours" : ""}" href="${t.href}" data-dl-pick>
+           <span><b>${t.name}</b><small>${t.note}</small></span>
+           ${key === detected ? '<em>Your computer</em>' : '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 19.5h14"/></svg>'}
+         </a>`).join("");
+      return `<section>${groups.length > 1 ? `<h3 class="dl-group">${names[g]}</h3>` : ""}${items}</section>`;
+    }).join("");
+    const tip = TIPS[os] ? `<p class="dl-tip">${TIPS[os]}</p>` : "";
+    dialog.innerHTML = `
+      <form method="dialog"><button class="dl-close" aria-label="Close">×</button></form>
+      <h2 id="dl-title">${title}</h2>
+      ${intro ? `<p class="dl-intro">${intro}</p>` : ""}
+      ${sections}${tip}`;
+    dialog.querySelectorAll("[data-dl-pick]").forEach((a) => a.addEventListener("click", () => setTimeout(() => dialog.close(), 150)));
+    dialog.showModal();
+  }
+
+  function setCaption(html) {
+    captions.forEach((c) => { c.innerHTML = html; c.hidden = !html; });
+    captions.forEach((c) => c.querySelector("[data-dl-all]")?.addEventListener("click", (e) => { e.preventDefault(); openChooser(); }));
+  }
+
+  ctas.forEach((a) => a.addEventListener("click", (e) => {
+    if (detected) {
+      const t = TARGETS[detected];
+      setCaption(`Your download of Sayvane for ${t.name} is starting. <a href="#download" data-dl-all>Not your computer?</a>`);
+      return; // follow the direct link
+    }
+    e.preventDefault();
+    openChooser();
+  }));
+
+  if (os === "mac" || os === "windows") {
     const label = os === "mac" ? "Download for Mac" : "Download for Windows";
     document.querySelectorAll("[data-os-label]").forEach((el) => (el.textContent = label));
     document.querySelector(`[data-platform="${os}"]`)?.classList.add("is-yours");
   }
-  // Main buttons download the right installer directly when the platform is certain;
-  // otherwise they scroll to the download cards.
-  const setDirect = (href) => document.querySelectorAll("[data-os-cta]").forEach((a) => (a.href = href));
-  if (os === "windows") {
-    // Only Chromium based browsers reveal the CPU; otherwise the cards let people choose.
-    winArch().then((arch) => {
-      if (arch === "arm") setDirect("/download/windows-arm");
-      else if (arch === "x64") setDirect("/download/windows");
-    });
-  }
-  if (os === "mac") {
-    macArch().then((arch) => {
-      if (arch === "arm") setDirect("/download/mac-arm");
-      else if (arch === "intel") setDirect("/download/mac-intel");
-    });
-  }
-  async function winArch() {
-    try {
-      const hints = await navigator.userAgentData?.getHighEntropyValues?.(["architecture"]);
-      if (hints?.architecture === "arm") return "arm";
-      if (hints?.architecture === "x86") return "x64";
-    } catch {}
-    return null;
-  }
-  async function macArch() {
-    try {
-      const hints = await navigator.userAgentData?.getHighEntropyValues?.(["architecture"]);
-      if (hints?.architecture === "arm") return "arm";
-      if (hints?.architecture === "x86") return "intel";
-    } catch {}
-    try {
-      const gl = document.createElement("canvas").getContext("webgl");
-      const ext = gl?.getExtension("WEBGL_debug_renderer_info");
-      const gpu = ext ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : "";
-      if (/Apple M\d/i.test(gpu)) return "arm";
-      if (/Intel|AMD|Radeon/i.test(gpu)) return "intel";
-    } catch {}
-    return null;
-  }
+  detectTarget().then((key) => {
+    detected = key;
+    if (!key) {
+      if (os === "mac" || os === "windows") setCaption(`Pick your ${os === "mac" ? "Mac" : "Windows"} version in one click.`);
+      return;
+    }
+    ctas.forEach((a) => (a.href = TARGETS[key].href));
+    setCaption(`${TARGETS[key].name} detected. <a href="#download" data-dl-all>Not your computer?</a>`);
+  });
 
   // ---------- Mobile menu ----------
   const toggle = document.querySelector(".menu-toggle");

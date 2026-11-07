@@ -28,6 +28,11 @@
       "permanent": false
     },
     {
+      "source": "/download/windows-x86",
+      "destination": "https://github.com/Arunkumar-MS/sayvane/releases/latest/download/Sayvane-Windows-x86-Setup.exe",
+      "permanent": false
+    },
+    {
       "source": "/download/checksums",
       "destination": "https://github.com/Arunkumar-MS/sayvane/releases/latest/download/SHA256SUMS.txt",
       "permanent": false
