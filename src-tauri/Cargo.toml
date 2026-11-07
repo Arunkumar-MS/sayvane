@@ -4,7 +4,8 @@ version = "0.1.0"
 description = "Local-first dictation for macOS and Windows"
 edition = "2021"
 rust-version = "1.89"
-license = "UNLICENSED"
+license = "MIT"
+repository = "https://github.com/Arunkumar-MS/sayvane"
 publish = false
 
 [lib]
