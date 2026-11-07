@@ -1,28 +1,66 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "",
+  "buildCommand": "",
+  "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/download/mac-arm", "destination": "https://github.com/Arunkumar-MS/sayvane/releases/latest", "permanent": false },
-    { "source": "/download/mac-intel", "destination": "https://github.com/Arunkumar-MS/sayvane/releases/latest", "permanent": false },
-    { "source": "/download/windows", "destination": "https://github.com/Arunkumar-MS/sayvane/releases/latest", "permanent": false }
+    {
+      "source": "/download/mac-arm",
+      "destination": "https://github.com/Arunkumar-MS/sayvane/releases/latest",
+      "permanent": false
+    },
+    {
+      "source": "/download/mac-intel",
+      "destination": "https://github.com/Arunkumar-MS/sayvane/releases/latest",
+      "permanent": false
+    },
+    {
+      "source": "/download/windows",
+      "destination": "https://github.com/Arunkumar-MS/sayvane/releases/latest",
+      "permanent": false
+    }
   ],
   "headers": [
     {
       "source": "/assets/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=86400"
+        }
+      ]
     },
     {
       "source": "/(.*)\\.(css|js)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
+      ]
     },
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
       ]
     }
   ]
