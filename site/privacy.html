@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#131209">
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/icon-180.png">
+  <link rel="preload" href="/assets/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <title>Privacy | Sayvane</title>
+  <meta name="description" content="How Sayvane handles your voice and text. Recognition runs on your computer, recordings stay in local History, and nothing is sent anywhere unless you turn on AI polish.">
+  <link rel="canonical" href="https://sayvane.vercel.app/privacy">
+  <meta property="og:title" content="Privacy | Sayvane">
+  <meta property="og:image" content="https://sayvane.vercel.app/assets/og.png">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav-wrap">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/"><img src="/assets/icon.svg" alt="" width="28" height="28"><span>Sayvane</span></a>
+      <a class="btn btn-sm btn-ghost" href="/">Back to home</a>
+    </nav>
+  </header>
+  <main id="main" class="doc">
+    <div class="container doc-inner">
+      <p class="kicker caption-3">Privacy</p>
+      <h1 class="heading-2">Your words stay<br>on your computer.</h1>
+      <p class="body-lg">Last updated 7 November 2026. This page explains what the Sayvane desktop app does with your data. This website itself sets no cookies and runs no analytics.</p>
+
+      <h2 class="heading-5">What stays on your computer</h2>
+      <ul class="never body-6">
+        <li>Your recordings, saved before transcription so nothing is lost</li>
+        <li>Your transcripts, original and polished, in local History</li>
+        <li>Your settings, shortcuts and provider profiles</li>
+      </ul>
+      <p class="body-6">Speech recognition runs on your own processor. Once a model is installed, dictation works with the network turned off. You choose how long recordings are kept and can delete your data from Settings at any time.</p>
+
+      <h2 class="heading-5">What can leave it, and only if you choose</h2>
+      <p class="body-6"><strong>Downloading a speech model.</strong> Models are fetched only when you start an install, and each file is checked against a published checksum. You can import a model file instead on machines that stay offline.</p>
+      <p class="body-6"><strong>AI polish.</strong> Off by default. A saved API key alone does not turn it on. When you enable it, Sayvane sends only the text of the current transcript, with fixed editing instructions, to the provider you selected. It never sends your audio, your History, the contents of the field you are typing in, your clipboard, or app names. What that provider does with the text is governed by its own policy.</p>
+
+      <h2 class="heading-5">What Sayvane never does</h2>
+      <ul class="never body-6">
+        <li>Require an account or sign in</li>
+        <li>Record in the background when you haven't asked it to</li>
+        <li>Log what you type on your keyboard</li>
+        <li>Type into password fields</li>
+        <li>Press Enter or Send for you</li>
+      </ul>
+
+      <h2 class="heading-5">Permissions it asks for</h2>
+      <p class="body-6">Microphone access, to hear you while you hold the shortcut. On macOS, Accessibility access, to type your words into other apps and recognise the Fn gesture. Each permission is explained in the app before you grant it.</p>
+
+      <p class="body-6 muted">Questions about privacy can be raised on the project's issue tracker.</p>
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a class="brand" href="/"><img src="/assets/icon.svg" alt="" width="24" height="24"><span>Sayvane</span></a>
+      <ul class="footer-links caption-2"><li><a href="/">Home</a></li><li><a href="/privacy" aria-current="page">Privacy</a></li></ul>
+      <p class="caption-5 muted">&copy; 2026 Sayvane</p>
+    </div>
+  </footer>
+</body>
+</html>

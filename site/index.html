@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sayvane | Private voice dictation for Mac and Windows</title>
+  <meta name="description" content="Speak where you type. Sayvane is a desktop dictation app that turns your voice into text in any app on macOS and Windows. Speech recognition runs offline on your computer. No account needed.">
+  <link rel="canonical" href="https://sayvane.vercel.app/">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#131209">
+  <meta name="color-scheme" content="dark">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Sayvane">
+  <meta property="og:url" content="https://sayvane.vercel.app/">
+  <meta property="og:title" content="Sayvane | Say it the way you mean it">
+  <meta property="og:description" content="Hold one key and speak. Sayvane types your words into any app on your Mac or PC, and recognition happens on your computer, not in the cloud.">
+  <meta property="og:image" content="https://sayvane.vercel.app/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Sayvane: speak where you type. Private dictation for Mac and Windows.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sayvane | Say it the way you mean it">
+  <meta name="twitter:description" content="Private desktop dictation for Mac and Windows. Speak into any app; recognition runs offline on your computer.">
+  <meta name="twitter:image" content="https://sayvane.vercel.app/assets/og.png">
+
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/icon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/assets/icon-180.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <link rel="preload" href="/assets/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" as="image" href="/assets/shots/home-dark.webp" type="image/webp">
+  <link rel="stylesheet" href="/styles.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://sayvane.vercel.app/#org",
+        "name": "Sayvane",
+        "url": "https://sayvane.vercel.app/",
+        "logo": "https://sayvane.vercel.app/assets/icon-512.png"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://sayvane.vercel.app/#website",
+        "url": "https://sayvane.vercel.app/",
+        "name": "Sayvane",
+        "publisher": { "@id": "https://sayvane.vercel.app/#org" },
+        "inLanguage": "en"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://sayvane.vercel.app/#app",
+        "name": "Sayvane",
+        "description": "Desktop dictation app for macOS and Windows. Hold a shortcut, speak, and your words are typed into the field you were using. Speech recognition runs locally and works offline once a model is installed. Optional AI polishing uses a provider you choose and is off by default.",
+        "applicationCategory": "ProductivityApplication",
+        "applicationSubCategory": "Speech to text",
+        "operatingSystem": "macOS 13 or later (Apple Silicon and Intel), Windows 10 22H2, Windows 11 (x64)",
+        "softwareVersion": "0.1.0",
+        "url": "https://sayvane.vercel.app/",
+        "image": "https://sayvane.vercel.app/assets/og.png",
+        "screenshot": [
+          "https://sayvane.vercel.app/assets/shots/home-dark.webp",
+          "https://sayvane.vercel.app/assets/shots/history-dark.webp",
+          "https://sayvane.vercel.app/assets/shots/settings-dark.webp"
+        ],
+        "featureList": [
+          "Dictate into any app with a global shortcut",
+          "Offline, on device speech recognition",
+          "Hold to talk and hands free modes",
+          "Floating recording bar that never steals focus",
+          "Never presses Enter or Send",
+          "Searchable local History with recovery of saved recordings",
+          "Optional AI polishing through OpenRouter, a compatible API, or a local server"
+        ],
+        "publisher": { "@id": "https://sayvane.vercel.app/#org" }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://sayvane.vercel.app/#faq",
+        "mainEntity": [
+          { "@type": "Question", "name": "Does Sayvane work offline?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once you install a speech model, recognition runs entirely on your computer and works with the network disconnected. Models download only when you start the install, and you can also import a model file on machines that are always offline." } },
+          { "@type": "Question", "name": "Is my voice sent to the cloud?", "acceptedAnswer": { "@type": "Answer", "text": "No. Audio is recorded and transcribed on your computer and saved in your local History. Nothing leaves the machine unless you turn on AI polishing, and even then only the text of the current transcript is sent to the provider you chose. Audio, History, clipboard contents and app names are never sent." } },
+          { "@type": "Question", "name": "Which apps can I dictate into?", "acceptedAnswer": { "@type": "Answer", "text": "Any app with an editable text field: browsers, mail, chat apps, notes, editors and Electron apps. Sayvane inserts text into the field you were typing in when you started speaking. Password fields are refused." } },
+          { "@type": "Question", "name": "Will Sayvane send my message by accident?", "acceptedAnswer": { "@type": "Answer", "text": "No. Sayvane never presses Return, Enter or a Send button. It types your words and stops, so you can read them before you send. If you switch to a different window while it is working, automatic insertion pauses and you can copy or paste the result yourself." } },
+          { "@type": "Question", "name": "What are the keyboard shortcuts?", "acceptedAnswer": { "@type": "Answer", "text": "On a Mac, hold Fn to talk and release to finish, or double tap Fn for hands free recording. On Windows, hold Control plus Alt plus Space to talk, or press Control plus Alt plus Shift plus Space for hands free. Every shortcut can be changed in Settings, and Escape cancels." } },
+          { "@type": "Question", "name": "Which computers are supported?", "acceptedAnswer": { "@type": "Answer", "text": "Macs with Apple Silicon or Intel processors running macOS 13 or later, and x64 PCs running Windows 10 22H2 or Windows 11. Each platform gets a native build." } },
+          { "@type": "Question", "name": "What does AI polish do?", "acceptedAnswer": { "@type": "Answer", "text": "AI polish removes filler words and accidental repetition, applies your spoken corrections, fixes grammar and punctuation, and formats lists and paragraphs. It never summarizes or adds facts. It is off by default, and Sayvane always keeps your original transcript so you can compare." } },
+          { "@type": "Question", "name": "Do I need an account?", "acceptedAnswer": { "@type": "Answer", "text": "No. Sayvane has no account, no sign in and no hosted backend. Local dictation works without any AI provider credentials." } },
+          { "@type": "Question", "name": "What happens if something goes wrong mid recording?", "acceptedAnswer": { "@type": "Answer", "text": "Your recording is saved to disk before transcription starts. If anything fails, the entry stays in History with its audio, and Recover transcribes it again." } }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav-wrap">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="/" aria-current="page">
+        <img src="/assets/icon.svg" alt="" width="28" height="28">
+        <span>Sayvane</span>
+      </a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#privacy">Privacy</a></li>
+        <li><a href="#tour">Tour</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <a class="btn btn-sm btn-primary nav-cta" href="#download">Download</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+        <span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <ul>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#privacy">Privacy</a></li>
+      <li><a href="#tour">Tour</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a class="btn btn-md btn-primary" href="#download">Download Sayvane</a></li>
+    </ul>
+  </div>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="aura" aria-hidden="true"></div>
+      <div class="container hero-inner">
+        <p class="eyebrow caption-1"><span class="dot" aria-hidden="true"></span>Private dictation for Mac and Windows</p>
+        <h1 id="hero-title" class="heading-1 hero-title">Say it the way<br>you mean it.</h1>
+        <p class="hero-sub body-lg">Hold one key and speak. Sayvane types your words into any app, and the listening happens on your own computer, never in the cloud.</p>
+        <div class="hero-actions">
+          <a class="btn btn-lg btn-primary" href="#download" data-os-cta>
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 19.5h14"/></svg>
+            <span data-os-label>Download Sayvane</span>
+          </a>
+          <a class="link-quiet body-5" href="#how">See how it works</a>
+        </div>
+        <ul class="proof caption-2" aria-label="At a glance">
+          <li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Works offline</li>
+          <li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>No account</li>
+          <li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Never hits send</li>
+        </ul>
+      </div>
+
+      <!-- Live demo: a text field filling as someone speaks -->
+      <div class="container">
+        <figure class="stage" aria-label="Animated example of Sayvane typing dictated words into an app">
+          <div class="stage-device">
+          <div class="stage-window">
+            <div class="window-bar" aria-hidden="true">
+              <span class="lights"><i></i><i></i><i></i></span>
+              <span class="window-app caption-4" data-demo-app>Slack</span>
+            </div>
+            <div class="window-body">
+              <p class="demo-to caption-2" data-demo-to>#design</p>
+              <p class="demo-text body-lg" aria-live="off"><span data-demo-text></span><span class="caret" aria-hidden="true"></span></p>
+            </div>
+          </div>
+          <div class="pill" data-pill aria-hidden="true">
+            <span class="pill-rec"></span>
+            <span class="pill-wave" data-wave></span>
+            <span class="pill-label caption-4" data-pill-label>Listening</span>
+          </div>
+          </div>
+          <figcaption class="caption-2 stage-cap">Hold <kbd>fn</kbd> and speak. Release, and your words appear where your cursor was.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- The feeling -->
+    <section class="section moments" aria-labelledby="moments-title">
+      <div class="container">
+        <p class="kicker caption-3 reveal">Why voice</p>
+        <h2 id="moments-title" class="heading-2 reveal">Your best thoughts don't wait<br>for your fingers to catch up.</h2>
+        <div class="moment-grid">
+          <article class="moment reveal">
+            <span class="moment-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg></span>
+            <h3 class="heading-6">The idea that arrives mid stride</h3>
+            <p class="body-6">You know exactly what you want to say. By the time you've typed half of it, the shape of it is gone. Speak it while it's still warm.</p>
+          </article>
+          <article class="moment reveal">
+            <span class="moment-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M4 6.5h16v10H9l-5 4v-14Z"/></svg></span>
+            <h3 class="heading-6">The reply you keep rewriting</h3>
+            <p class="body-6">Some messages are easier to say out loud. Talk to the person the way you would across a table, and let the words land in the box.</p>
+          </article>
+          <article class="moment reveal">
+            <span class="moment-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M7 11V6.5a1.5 1.5 0 0 1 3 0V11m0-1.5v-5a1.5 1.5 0 0 1 3 0v5m0 0V6a1.5 1.5 0 0 1 3 0v6.5m0-3a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-1a6.5 6.5 0 0 1-5.4-2.9L3.4 14.5a1.5 1.5 0 0 1 2.4-1.8L7 14"/></svg></span>
+            <h3 class="heading-6">The hands that need a break</h3>
+            <p class="body-6">Long days at the keyboard add up. Lean back, look away from the screen, and keep working with your voice.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="section" id="how" aria-labelledby="how-title">
+      <div class="container">
+        <p class="kicker caption-3 reveal">How it works</p>
+        <h2 id="how-title" class="heading-2 reveal">Three moves.<br>No new app to learn.</h2>
+        <ol class="steps">
+          <li class="step reveal">
+            <span class="step-n caption-3">01</span>
+            <h3 class="heading-5">Put your cursor anywhere</h3>
+            <p class="body-6">Mail, Slack, a browser tab, your notes, a code comment. If you can type there, Sayvane can write there.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step-n caption-3">02</span>
+            <h3 class="heading-5">Hold a key and talk</h3>
+            <p class="body-6">Hold <kbd>fn</kbd> on a Mac or <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Space</kbd> on Windows. A small bar shows your voice as you speak. Double tap for hands free.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step-n caption-3">03</span>
+            <h3 class="heading-5">Let go. It's there.</h3>
+            <p class="body-6">Your words are transcribed on your computer and typed into the field you started in. Sayvane stops there, so you always read before you send.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Tagline reveal -->
+    <section class="section tagline" aria-label="Our promise">
+      <div class="container">
+        <p class="heading-2 tagline-text" data-words>Your voice is personal. So Sayvane hears it on your computer, keeps it on your computer, and sends nothing unless you ask.</p>
+      </div>
+    </section>
+
+    <!-- Benefits bento -->
+    <section class="section" id="features" aria-labelledby="features-title">
+      <div class="container">
+        <p class="kicker caption-3 reveal">What you get</p>
+        <h2 id="features-title" class="heading-2 reveal">Built to disappear<br>into your day.</h2>
+        <div class="bento">
+          <article class="card card-wide reveal">
+            <div class="card-copy">
+              <h3 class="heading-5">A bar that stays out of your way</h3>
+              <p class="body-6">A small capsule rests above your Dock or taskbar. It shows a live waveform while you talk and never takes focus from the app you're writing in, so your cursor stays exactly where you left it.</p>
+            </div>
+            <div class="bar-demo" aria-hidden="true">
+              <div class="bar-state"><span class="mini-pill nub"></span><span class="caption-5">Idle</span></div>
+              <div class="bar-state"><span class="mini-pill rec"><i></i><b data-mini-wave></b></span><span class="caption-5">Recording</span></div>
+              <div class="bar-state"><span class="mini-pill busy"><b class="dots"><i></i><i></i><i></i></b><em class="caption-4">Transcribing locally</em></span><span class="caption-5">Working</span></div>
+            </div>
+          </article>
+          <article class="card reveal">
+            <span class="card-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M3 3l18 18M8.5 8.6A6 6 0 0 0 6 13M2 8.8A12.5 12.5 0 0 1 5.3 6.4m4.1-1.2A12.5 12.5 0 0 1 22 8.8m-3.6 3.6a6 6 0 0 0-2.5-1.9M12 18.5h.01"/></svg></span>
+            <h3 class="heading-6">Works with the WiFi off</h3>
+            <p class="body-6">Recognition runs on your own processor. On a plane, in a basement, behind a strict firewall: it still works.</p>
+          </article>
+          <article class="card reveal">
+            <span class="card-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3.5 5 6.5v5c0 4.3 2.9 8 7 9 4.1-1 7-4.7 7-9v-5l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+            <h3 class="heading-6">Never presses send</h3>
+            <p class="body-6">Sayvane types and stops. It never hits Enter. Switch windows mid sentence and it holds the text for you instead of guessing.</p>
+          </article>
+          <article class="card reveal">
+            <span class="card-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 1 0 2.5-6M3.5 4v4h4M12 7.5V12l3 2"/></svg></span>
+            <h3 class="heading-6">Nothing gets lost</h3>
+            <p class="body-6">Every recording is saved before it's transcribed. Search your History, copy anything back, and recover a take if something fails.</p>
+          </article>
+          <article class="card reveal">
+            <span class="card-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v3m0 12v3M3 12h3m12 0h3M7.5 7.5l1.8 1.8m5.4 5.4 1.8 1.8m0-9-1.8 1.8m-5.4 5.4-1.8 1.8"/></svg></span>
+            <h3 class="heading-6">Polish, only if you want it</h3>
+            <p class="body-6">Turn on AI polish to clean up filler words and punctuation through a provider you pick. It's off until you say otherwise, and your original is always kept.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product tour -->
+    <section class="section tour" id="tour" aria-labelledby="tour-title">
+      <div class="container">
+        <p class="kicker caption-3 reveal">Take a look</p>
+        <h2 id="tour-title" class="heading-2 reveal">Calm, clear, and<br>yours to keep.</h2>
+        <div class="tabs reveal" role="tablist" aria-label="App screens">
+          <button class="tab button-sm" role="tab" id="tab-home" aria-controls="panel-home" aria-selected="true">Home</button>
+          <button class="tab button-sm" role="tab" id="tab-history" aria-controls="panel-history" aria-selected="false" tabindex="-1">History</button>
+          <button class="tab button-sm" role="tab" id="tab-settings" aria-controls="panel-settings" aria-selected="false" tabindex="-1">Settings</button>
+        </div>
+        <div class="shot-frame reveal">
+          <div class="shot-panel" role="tabpanel" id="panel-home" aria-labelledby="tab-home">
+            <img src="/assets/shots/home-dark.webp" width="1600" height="1047" alt="Sayvane Home screen with a Record a note button, weekly statistics for words, speaking speed, time saved and streak, and recent dictations inserted into Slack and Mail.">
+            <p class="shot-note body-6">Home shows how much you've said this week, roughly how much typing time it saved, and your latest notes.</p>
+          </div>
+          <div class="shot-panel" role="tabpanel" id="panel-history" aria-labelledby="tab-history" hidden>
+            <img src="/assets/shots/history-dark.webp" width="1600" height="1047" loading="lazy" alt="Sayvane History screen listing today's dictations with timestamps, destination apps, insertion status, and a Recover button on an entry whose audio was saved.">
+            <p class="shot-note body-6">History keeps every take, searchable, with its original and polished text side by side.</p>
+          </div>
+          <div class="shot-panel" role="tabpanel" id="panel-settings" aria-labelledby="tab-settings" hidden>
+            <img src="/assets/shots/settings-dark.webp" width="1600" height="1047" loading="lazy" alt="Sayvane Settings screen with tabs for Dictation, Shortcuts, AI Polish, and Privacy, showing the installed speech model and language options.">
+            <p class="shot-note body-6">Settings lets you choose your model, language, microphone, shortcuts and how long recordings are kept.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy -->
+    <section class="section" id="privacy" aria-labelledby="privacy-title">
+      <div class="container">
+        <p class="kicker caption-3 reveal">Privacy</p>
+        <h2 id="privacy-title" class="heading-2 reveal">Here's exactly what<br>leaves your computer.</h2>
+        <div class="privacy-grid">
+          <article class="card privacy-card reveal">
+            <p class="caption-3 tag tag-ok">AI polish off &middot; the default</p>
+            <h3 class="heading-4">Nothing.</h3>
+            <p class="body-6">Your audio, transcripts and History stay on your disk. No account, no analytics on what you say, no server of ours in the loop.</p>
+          </article>
+          <article class="card privacy-card reveal">
+            <p class="caption-3 tag">AI polish on &middot; your choice</p>
+            <h3 class="heading-4">One transcript.</h3>
+            <p class="body-6">Only the text of the current dictation goes to the provider you picked: OpenRouter, any compatible API, or a model running on your own machine.</p>
+            <ul class="never body-6">
+              <li>Never your audio</li>
+              <li>Never your History</li>
+              <li>Never your clipboard or app names</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Download -->
+    <section class="section download" id="download" aria-labelledby="download-title">
+      <div class="container">
+        <p class="kicker caption-3 reveal">Get Sayvane</p>
+        <h2 id="download-title" class="heading-2 reveal">Native on every<br>computer you use.</h2>
+        <div class="platforms">
+          <article class="card platform reveal" data-platform="mac">
+            <span class="card-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M4.5 5.5h15v10h-15zM2.5 18.5h19"/></svg></span>
+            <h3 class="heading-5">macOS</h3>
+            <p class="body-6">macOS 13 Ventura or later. Separate native builds for Apple Silicon and Intel, no Rosetta needed.</p>
+            <div class="platform-actions">
+              <a class="btn btn-md btn-primary" href="/download/mac-arm">Apple Silicon</a>
+              <a class="btn btn-md btn-ghost" href="/download/mac-intel">Intel</a>
+            </div>
+            <p class="caption-5 muted">Hold <kbd>fn</kbd> to talk. Double tap for hands free.</p>
+          </article>
+          <article class="card platform reveal" data-platform="windows">
+            <span class="card-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M3.5 4.5h17v11h-17zM9 19.5h6M12 15.5v4"/></svg></span>
+            <h3 class="heading-5">Windows</h3>
+            <p class="body-6">Windows 10 22H2 or Windows 11 on x64 PCs. A native desktop app with fully configurable shortcuts.</p>
+            <div class="platform-actions">
+              <a class="btn btn-md btn-primary" href="/download/windows">Windows x64</a>
+            </div>
+            <p class="caption-5 muted">Hold <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Space</kbd> to talk.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" id="faq" aria-labelledby="faq-title">
+      <div class="container faq-wrap">
+        <div>
+          <p class="kicker caption-3 reveal">Questions</p>
+          <h2 id="faq-title" class="heading-2 reveal">Good to know.</h2>
+        </div>
+        <div class="faq reveal">
+          <details>
+            <summary class="title-2">Does Sayvane work offline?</summary>
+            <p class="body-6">Yes. Once you install a speech model, recognition runs entirely on your computer and works with the network disconnected. Models download only when you start the install, and you can also import a model file on machines that are always offline.</p>
+          </details>
+          <details>
+            <summary class="title-2">Is my voice sent to the cloud?</summary>
+            <p class="body-6">No. Audio is recorded and transcribed on your computer and saved in your local History. Nothing leaves the machine unless you turn on AI polishing, and even then only the text of the current transcript is sent to the provider you chose.</p>
+          </details>
+          <details>
+            <summary class="title-2">Which apps can I dictate into?</summary>
+            <p class="body-6">Any app with an editable text field: browsers, mail, chat apps, notes, editors and Electron apps. Sayvane inserts text into the field you were typing in when you started speaking. Password fields are refused.</p>
+          </details>
+          <details>
+            <summary class="title-2">Will Sayvane send my message by accident?</summary>
+            <p class="body-6">No. Sayvane never presses Return, Enter or a Send button. It types your words and stops. If you switch to a different window while it is working, automatic insertion pauses and you can copy or paste the result yourself.</p>
+          </details>
+          <details>
+            <summary class="title-2">What are the keyboard shortcuts?</summary>
+            <p class="body-6">On a Mac, hold <kbd>fn</kbd> to talk and release to finish, or double tap <kbd>fn</kbd> for hands free. On Windows, hold <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Space</kbd>, or press <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>Space</kbd> for hands free. Every shortcut can be changed, and <kbd>Esc</kbd> cancels.</p>
+          </details>
+          <details>
+            <summary class="title-2">Which computers are supported?</summary>
+            <p class="body-6">Macs with Apple Silicon or Intel processors on macOS 13 or later, and x64 PCs on Windows 10 22H2 or Windows 11. Each gets its own native build.</p>
+          </details>
+          <details>
+            <summary class="title-2">What does AI polish actually do?</summary>
+            <p class="body-6">It removes filler words and accidental repetition, applies your spoken corrections, fixes grammar and punctuation, and formats lists and paragraphs. It never summarizes or adds facts. It's off by default, and your original transcript is always kept so you can compare.</p>
+          </details>
+          <details>
+            <summary class="title-2">Do I need an account?</summary>
+            <p class="body-6">No. There's no account, no sign in and no hosted backend. Local dictation works without any AI provider credentials.</p>
+          </details>
+          <details>
+            <summary class="title-2">What if something goes wrong mid recording?</summary>
+            <p class="body-6">Your recording is saved to disk before transcription starts. If anything fails, the entry stays in History with its audio, and Recover transcribes it again.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="section final" aria-labelledby="final-title">
+      <div class="aura aura-low" aria-hidden="true"></div>
+      <div class="container final-inner">
+        <img class="final-icon reveal" src="/assets/icon.svg" alt="" width="88" height="88">
+        <h2 id="final-title" class="heading-2 hero-title reveal">Say what you mean.<br>Then get back to your day.</h2>
+        <p class="body-lg muted reveal">Private, offline dictation for Mac and Windows. No account needed.</p>
+        <div class="hero-actions reveal">
+          <a class="btn btn-lg btn-primary" href="#download" data-os-cta>
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 19.5h14"/></svg>
+            <span data-os-label>Download Sayvane</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a class="brand" href="/">
+        <img src="/assets/icon.svg" alt="" width="24" height="24">
+        <span>Sayvane</span>
+      </a>
+      <p class="caption-5 muted">Speak where you type.</p>
+      <ul class="footer-links caption-2">
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <p class="caption-5 muted">&copy; 2026 Sayvane</p>
+    </div>
+  </footer>
+
+  <script src="/main.js" defer></script>
+</body>
+</html>

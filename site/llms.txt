@@ -1,0 +1,16 @@
+# Sayvane
+
+> Sayvane is a desktop dictation app for macOS (Apple Silicon and Intel, macOS 13+) and Windows x64 (Windows 10 22H2, Windows 11). Hold a shortcut, speak, and your words are typed into the text field you were using in any app. Speech recognition runs locally and works offline once a model is installed. No account or hosted backend.
+
+## Key facts
+
+- Shortcuts: hold Fn on macOS (double tap Fn for hands free); Ctrl+Alt+Space on Windows (Ctrl+Alt+Shift+Space for hands free). All configurable; Escape cancels.
+- Never presses Enter, Return or Send. If the user switches windows mid dictation, automatic insertion pauses.
+- Every recording is saved locally before transcription; History is searchable and failed takes can be recovered.
+- Optional AI polish (off by default) sends only the current transcript text to a provider the user chooses: OpenRouter, a compatible API, an organization gateway, or a local server. Audio, History, clipboard and app names are never sent.
+- A floating recording bar sits above the Dock or taskbar and never takes focus.
+
+## Pages
+
+- [Home](https://sayvane.vercel.app/): product overview, how it works, privacy, downloads, FAQ
+- [Privacy](https://sayvane.vercel.app/privacy): what data stays on the computer and what can leave it

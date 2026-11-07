@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F2734F"/>
+      <stop offset="0.55" stop-color="#E8573A"/>
+      <stop offset="1" stop-color="#B83A22"/>
+    </linearGradient>
+    <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#5a1608" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <rect x="100" y="100" width="824" height="824" rx="190" fill="url(#bg)"/>
+  <rect x="100" y="100" width="824" height="824" rx="190" fill="url(#sheen)"/>
+  <g filter="url(#shadow)" fill="#FFF8F4">
+    <!-- vane arrow: head on the right, shaft to the left -->
+    <path d="M770 512 L640 432 L640 482 L470 482 L470 542 L640 542 L640 592 Z"/>
+    <!-- tail feathers become sound-wave bars -->
+    <rect x="404" y="452" width="40" height="120" rx="20"/>
+    <rect x="334" y="402" width="40" height="220" rx="20"/>
+    <rect x="264" y="447" width="40" height="130" rx="20"/>
+  </g>
+</svg>
