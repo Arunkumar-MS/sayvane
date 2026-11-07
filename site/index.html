@@ -59,7 +59,7 @@
         "description": "Desktop dictation app for macOS and Windows. Hold a shortcut, speak, and your words are typed into the field you were using. Speech recognition runs locally and works offline once a model is installed. Optional AI polishing uses a provider you choose and is off by default.",
         "applicationCategory": "ProductivityApplication",
         "applicationSubCategory": "Speech to text",
-        "operatingSystem": "macOS 13 or later (Apple Silicon and Intel), Windows 10 22H2, Windows 11 (x64)",
+        "operatingSystem": "macOS 13 or later (Apple Silicon and Intel), Windows 10 22H2 or Windows 11 (x64), Windows 11 on ARM64",
         "softwareVersion": "0.1.0",
         "url": "https://sayvane.vercel.app/",
         "image": "https://sayvane.vercel.app/assets/og.png",
@@ -88,7 +88,7 @@
           { "@type": "Question", "name": "Which apps can I dictate into?", "acceptedAnswer": { "@type": "Answer", "text": "Any app with an editable text field: browsers, mail, chat apps, notes, editors and Electron apps. Sayvane inserts text into the field you were typing in when you started speaking. Password fields are refused." } },
           { "@type": "Question", "name": "Will Sayvane send my message by accident?", "acceptedAnswer": { "@type": "Answer", "text": "No. Sayvane never presses Return, Enter or a Send button. It types your words and stops, so you can read them before you send. If you switch to a different window while it is working, automatic insertion pauses and you can copy or paste the result yourself." } },
           { "@type": "Question", "name": "What are the keyboard shortcuts?", "acceptedAnswer": { "@type": "Answer", "text": "On a Mac, hold Fn to talk and release to finish, or double tap Fn for hands free recording. On Windows, hold Control plus Alt plus Space to talk, or press Control plus Alt plus Shift plus Space for hands free. Every shortcut can be changed in Settings, and Escape cancels." } },
-          { "@type": "Question", "name": "Which computers are supported?", "acceptedAnswer": { "@type": "Answer", "text": "Macs with Apple Silicon or Intel processors running macOS 13 or later, and x64 PCs running Windows 10 22H2 or Windows 11. Each platform gets a native build." } },
+          { "@type": "Question", "name": "Which computers are supported?", "acceptedAnswer": { "@type": "Answer", "text": "Macs with Apple Silicon or Intel processors running macOS 13 or later, Windows PCs with Intel or AMD processors (x64) running Windows 10 22H2 or Windows 11, and Windows 11 on ARM (Snapdragon and similar). Each platform gets its own native build." } },
           { "@type": "Question", "name": "What does AI polish do?", "acceptedAnswer": { "@type": "Answer", "text": "AI polish removes filler words and accidental repetition, applies your spoken corrections, fixes grammar and punctuation, and formats lists and paragraphs. It never summarizes or adds facts. It is off by default, and Sayvane always keeps your original transcript so you can compare." } },
           { "@type": "Question", "name": "Do I need an account?", "acceptedAnswer": { "@type": "Answer", "text": "No. Sayvane has no account, no sign in and no hosted backend. Local dictation works without any AI provider credentials." } },
           { "@type": "Question", "name": "What happens if something goes wrong mid recording?", "acceptedAnswer": { "@type": "Answer", "text": "Your recording is saved to disk before transcription starts. If anything fails, the entry stays in History with its audio, and Recover transcribes it again." } }
@@ -379,14 +379,15 @@
           <article class="platform spot reveal" data-platform="windows">
             <span class="plat-badge">Windows 10 22H2 · 11</span>
             <h3>Windows</h3>
-            <p>A native x64 desktop app with fully configurable shortcuts.</p>
+            <p>Native builds for Intel and AMD PCs (x64) and for Windows 11 on ARM, such as Snapdragon laptops. Fully configurable shortcuts.</p>
             <div class="platform-actions">
               <a class="btn btn-md btn-primary magnetic" href="/download/windows">Windows x64</a>
+              <a class="btn btn-md btn-ghost" href="/download/windows-arm">Windows ARM64</a>
             </div>
             <p class="small">Hold <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Space</kbd> to talk.</p>
           </article>
         </div>
-        <p class="dl-meta reveal">Not sure which Mac you have? Apple menu, then About This Mac: "Chip" means Apple Silicon, "Processor" means Intel. &nbsp;·&nbsp; <a href="/download/checksums">SHA256 checksums</a> &nbsp;·&nbsp; <a href="/releases">All releases</a></p>
+        <p class="dl-meta reveal">Not sure which you have? Mac: Apple menu, About This Mac, where "Chip" means Apple Silicon and "Processor" means Intel. Windows: Settings, System, About, then "System type". &nbsp;·&nbsp; <a href="/download/checksums">SHA256 checksums</a> &nbsp;·&nbsp; <a href="/releases">All releases</a></p>
       </div>
     </section>
 
@@ -403,7 +404,7 @@
           <details><summary>Which apps can I dictate into?</summary><p>Any app with an editable text field: browsers, mail, chat apps, notes, editors and Electron apps. Sayvane inserts text into the field you were typing in when you started speaking. Password fields are refused.</p></details>
           <details><summary>Will Sayvane send my message by accident?</summary><p>No. Sayvane never presses Return, Enter or a Send button. It types your words and stops. If you switch to a different window while it is working, automatic insertion pauses and you can copy or paste the result yourself.</p></details>
           <details><summary>What are the keyboard shortcuts?</summary><p>On a Mac, hold <kbd>fn</kbd> to talk and release to finish, or double tap <kbd>fn</kbd> for hands free. On Windows, hold <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Space</kbd>, or press <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>Space</kbd> for hands free. Every shortcut can be changed, and <kbd>Esc</kbd> cancels.</p></details>
-          <details><summary>Which computers are supported?</summary><p>Macs with Apple Silicon or Intel processors on macOS 13 or later, and x64 PCs on Windows 10 22H2 or Windows 11. Each gets its own native build.</p></details>
+          <details><summary>Which computers are supported?</summary><p>Macs with Apple Silicon or Intel processors on macOS 13 or later, Windows PCs with Intel or AMD processors (x64) on Windows 10 22H2 or Windows 11, and Windows 11 on ARM (Snapdragon and similar). Each gets its own native build.</p></details>
           <details><summary>What does AI polish actually do?</summary><p>It removes filler words and accidental repetition, applies your spoken corrections, fixes grammar and punctuation, and formats lists and paragraphs. It never summarizes or adds facts. It's off by default, and your original transcript is always kept so you can compare.</p></details>
           <details><summary>Do I need an account?</summary><p>No. There's no account, no sign in and no hosted backend. Local dictation works without any AI provider credentials.</p></details>
           <details><summary>What if something goes wrong mid recording?</summary><p>Your recording is saved to disk before transcription starts. If anything fails, the entry stays in History with its audio, and Recover transcribes it again.</p></details>

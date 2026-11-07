@@ -19,12 +19,26 @@
   // Main buttons download the right installer directly when the platform is certain;
   // otherwise they scroll to the download cards.
   const setDirect = (href) => document.querySelectorAll("[data-os-cta]").forEach((a) => (a.href = href));
-  if (os === "windows") setDirect("/download/windows");
+  if (os === "windows") {
+    // Only Chromium based browsers reveal the CPU; otherwise the cards let people choose.
+    winArch().then((arch) => {
+      if (arch === "arm") setDirect("/download/windows-arm");
+      else if (arch === "x64") setDirect("/download/windows");
+    });
+  }
   if (os === "mac") {
     macArch().then((arch) => {
       if (arch === "arm") setDirect("/download/mac-arm");
       else if (arch === "intel") setDirect("/download/mac-intel");
     });
+  }
+  async function winArch() {
+    try {
+      const hints = await navigator.userAgentData?.getHighEntropyValues?.(["architecture"]);
+      if (hints?.architecture === "arm") return "arm";
+      if (hints?.architecture === "x86") return "x64";
+    } catch {}
+    return null;
   }
   async function macArch() {
     try {

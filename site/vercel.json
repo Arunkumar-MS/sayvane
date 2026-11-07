@@ -23,6 +23,11 @@
       "permanent": false
     },
     {
+      "source": "/download/windows-arm",
+      "destination": "https://github.com/Arunkumar-MS/sayvane/releases/latest/download/Sayvane-Windows-ARM64-Setup.exe",
+      "permanent": false
+    },
+    {
       "source": "/download/checksums",
       "destination": "https://github.com/Arunkumar-MS/sayvane/releases/latest/download/SHA256SUMS.txt",
       "permanent": false
