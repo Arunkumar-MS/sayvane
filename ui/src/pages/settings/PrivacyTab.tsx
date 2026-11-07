@@ -111,6 +111,27 @@ export function PrivacyTab() {
             );
           })}
         </div>
+        {os === "macos" && (perms.microphone !== "granted" || perms.accessibility !== "granted") && (
+          <div className="perm-reset">
+            <p>
+              Switched on in System Settings but still shows Not allowed? After installing a new version, macOS can keep
+              the old app's access. Reset it and allow access again.
+            </p>
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() =>
+                void attempt("Couldn't reset access", async () => {
+                  const msg = await api.resetPermissions();
+                  toast(msg);
+                  await refreshSnapshot();
+                })
+              }
+            >
+              Reset access
+            </Button>
+          </div>
+        )}
       </Section>
 
       <Section title="Recordings" description="Transcripts are always kept until you delete them. Choose how long the audio is kept.">

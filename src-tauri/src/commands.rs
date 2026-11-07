@@ -266,6 +266,37 @@ pub fn open_permission_settings(core: State<CoreRef>, kind: PermissionKind) {
     core.desktop.open_permission_settings(kind);
 }
 
+/// Clears this app's stale privacy entries (left by a previous build) and asks again.
+#[tauri::command]
+pub fn reset_permissions(core: State<CoreRef>) -> R<String> {
+    #[cfg(target_os = "macos")]
+    {
+        let failed = crate::platform::macos::reset_privacy(&crate::brand::brand().application_id);
+        core.desktop.request_permission(PermissionKind::Microphone);
+        core.desktop.request_permission(PermissionKind::Accessibility);
+        let c = core.inner().clone();
+        std::thread::spawn(move || {
+            for _ in 0..60 {
+                std::thread::sleep(std::time::Duration::from_millis(500));
+                c.refresh_permissions();
+            }
+        });
+        if failed.is_empty() {
+            Ok("Access was reset. Allow the microphone, then turn on Sayvane under Accessibility.".into())
+        } else {
+            Err(format!(
+                "Could not reset {}. In System Settings › Privacy & Security, select the old Sayvane entry, remove it with −, then add it again.",
+                failed.join(" and ")
+            ))
+        }
+    }
+    #[cfg(not(target_os = "macos"))]
+    {
+        core.desktop.open_permission_settings(PermissionKind::Microphone);
+        Ok("Opened microphone privacy settings.".into())
+    }
+}
+
 #[tauri::command]
 pub fn refresh_permissions(core: State<CoreRef>) {
     core.refresh_permissions();

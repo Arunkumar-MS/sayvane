@@ -814,3 +814,23 @@
   white-space: nowrap;
   flex: none;
 }
+
+.perm-reset {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--surface-2, rgba(127, 127, 127, 0.08));
+}
+.perm-reset p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-2, inherit);
+}
+.perm-reset button {
+  flex: none;
+}

@@ -66,6 +66,8 @@ export const api = {
   requestPermission: (kind: PermissionKind) => invoke<void>("request_permission", { kind }),
   openPermissionSettings: (kind: PermissionKind) => invoke<void>("open_permission_settings", { kind }),
   refreshPermissions: () => invoke<void>("refresh_permissions"),
+  /** Clears this app's stale OS privacy entries (after reinstalling) and asks again. */
+  resetPermissions: () => invoke<string>("reset_permissions"),
 
   // Providers
   listProfiles: () => invoke<ProviderProfile[]>("list_profiles"),

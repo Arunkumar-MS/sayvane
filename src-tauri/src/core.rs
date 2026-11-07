@@ -278,6 +278,7 @@ impl Core {
     // ---------- permissions ----------
 
     pub fn refresh_permissions(&self) {
+        crate::shell::ensure_key_tap(&self.app);
         let p = self.desktop.permissions();
         let changed = {
             let mut cur = self.permissions.lock();

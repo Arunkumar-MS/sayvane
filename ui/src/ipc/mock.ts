@@ -793,6 +793,8 @@ export async function handleMockCommand(cmd: string, a: Record<string, unknown>)
       emit({ kind: "navigate", page: a.page as "home" });
       return delay(undefined);
     case "reset_bar_position":
+    case "reset_permissions":
+      return delay("Access was reset. Allow the microphone, then turn on Sayvane under Accessibility.", 200);
     case "show_bar_menu":
     case "set_bar_hit_region":
     case "reveal_data_dir":

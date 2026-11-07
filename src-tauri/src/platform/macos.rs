@@ -30,7 +30,6 @@ extern "C" {
 #[link(name = "CoreGraphics", kind = "framework")]
 extern "C" {
     fn CGEventSourceFlagsState(state_id: i32) -> u64;
-    fn CGPreflightListenEventAccess() -> bool;
     fn CGRequestListenEventAccess() -> bool;
 }
 
@@ -236,11 +235,9 @@ impl Desktop for MacDesktop {
         PermissionStatus {
             microphone: mic,
             accessibility: if unsafe { AXIsProcessTrusted() } { PermissionState::Granted } else { PermissionState::Denied },
-            input_monitoring: if unsafe { CGPreflightListenEventAccess() } {
-                PermissionState::Granted
-            } else {
-                PermissionState::NotDetermined
-            },
+            // The Fn listener is an active event tap, which runs on Accessibility alone;
+            // Input Monitoring is not required, so it is not requested or shown.
+            input_monitoring: PermissionState::NotApplicable,
         }
     }
 
@@ -273,6 +270,28 @@ impl Desktop for MacDesktop {
             .arg(format!("x-apple.systempreferences:com.apple.preference.security?{anchor}"))
             .spawn();
     }
+}
+
+pub fn accessibility_trusted() -> bool {
+    unsafe { AXIsProcessTrusted() }
+}
+
+/// Clears this app's own privacy decisions so macOS asks again. Needed after reinstalling
+/// an ad-hoc signed build: the old grant belongs to the previous code identity and no
+/// longer applies, even though System Settings still shows it switched on.
+/// Returns the services that could not be reset.
+pub fn reset_privacy(bundle_id: &str) -> Vec<String> {
+    ["Microphone", "Accessibility", "ListenEvent"]
+        .iter()
+        .filter(|service| {
+            !std::process::Command::new("/usr/bin/tccutil")
+                .args(["reset", service, bundle_id])
+                .output()
+                .map(|o| o.status.success())
+                .unwrap_or(false)
+        })
+        .map(|s| s.to_string())
+        .collect()
 }
 
 /// Calls `on_suspend` when the Mac sleeps, the screens sleep, the session is switched

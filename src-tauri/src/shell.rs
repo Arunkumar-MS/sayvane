@@ -535,7 +535,12 @@ pub fn register_shortcuts(core: &Core) -> Vec<ShortcutStatus> {
             (true, None)
         } else if is_fn(&b.accelerator) {
             if cfg!(target_os = "macos") {
-                (core.settings().fn_gesture_enabled, None)
+                let enabled = core.settings().fn_gesture_enabled;
+                if enabled && !KEY_TAP_RUNNING.load(Ordering::SeqCst) {
+                    (false, Some("Needs Accessibility access. Turn on Sayvane in Privacy & Security › Accessibility.".into()))
+                } else {
+                    (enabled, None)
+                }
             } else {
                 (false, Some("The Fn key is not available as a shortcut on Windows.".into()))
             }
@@ -638,6 +643,32 @@ pub fn handle_shortcut(app: &AppHandle, shortcut: &Shortcut, state: ShortcutStat
     }
 }
 
+/// Whether the macOS Fn/Space/Escape listener is active.
+pub static KEY_TAP_RUNNING: AtomicBool = AtomicBool::new(false);
+
+/// Starts the keyboard listener once Accessibility is granted. Safe to call often:
+/// it runs on every permission refresh, so granting access works without a relaunch.
+pub fn ensure_key_tap(app: &AppHandle) {
+    #[cfg(target_os = "macos")]
+    {
+        if KEY_TAP_RUNNING.load(Ordering::SeqCst) || !crate::platform::macos::accessibility_trusted() {
+            return;
+        }
+        match crate::platform::macos::start_key_tap(Arc::new(FnHandler(app.clone()))) {
+            crate::platform::macos::TapStatus::Running => {
+                KEY_TAP_RUNNING.store(true, Ordering::SeqCst);
+                log::info!("keyboard listener started");
+                if let Some(c) = core(app) {
+                    register_shortcuts(&c);
+                }
+            }
+            crate::platform::macos::TapStatus::Unavailable(msg) => log::warn!("{msg}"),
+        }
+    }
+    #[cfg(not(target_os = "macos"))]
+    let _ = app;
+}
+
 #[cfg(target_os = "macos")]
 struct FnHandler(AppHandle);
 
@@ -700,15 +731,7 @@ pub fn setup(app: &AppHandle) -> Result<(), Box<dyn std::error::Error>> {
 
     #[cfg(target_os = "macos")]
     {
-        let status = crate::platform::macos::start_key_tap(Arc::new(FnHandler(app.clone())));
-        if let crate::platform::macos::TapStatus::Unavailable(msg) = status {
-            log::warn!("{msg}");
-            let mut list = core.shortcuts.lock();
-            for s in list.iter_mut().filter(|s| is_fn(&s.accelerator)) {
-                s.registered = false;
-                s.error = Some(msg.clone());
-            }
-        }
+        ensure_key_tap(app);
         let c = core.clone();
         crate::platform::macos::watch_sleep_and_lock(Arc::new(move |why| {
             let c = c.clone();

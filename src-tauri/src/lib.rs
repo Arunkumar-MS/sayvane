@@ -74,6 +74,7 @@ pub fn run() {
             commands::request_permission,
             commands::open_permission_settings,
             commands::refresh_permissions,
+            commands::reset_permissions,
             commands::list_profiles,
             commands::save_profile,
             commands::delete_profile,
