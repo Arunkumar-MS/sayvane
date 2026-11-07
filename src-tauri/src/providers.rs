@@ -268,6 +268,26 @@ pub fn http_client() -> reqwest::Client {
         .expect("HTTP client")
 }
 
+/// Client for public model downloads. These carry no credentials, and hosts such as
+/// Hugging Face serve files through CDN redirects, so redirects are followed — HTTPS only.
+pub fn download_client() -> reqwest::Client {
+    reqwest::Client::builder()
+        .https_only(true)
+        .redirect(reqwest::redirect::Policy::custom(|attempt| {
+            if attempt.previous().len() >= 5 {
+                attempt.error("too many redirects")
+            } else if attempt.url().scheme() != "https" {
+                attempt.stop()
+            } else {
+                attempt.follow()
+            }
+        }))
+        .user_agent(format!("{}/{}", crate::brand::brand().product_slug, env!("CARGO_PKG_VERSION")))
+        .connect_timeout(Duration::from_secs(15))
+        .build()
+        .expect("HTTP client")
+}
+
 fn auth_headers(
     store: &ProfileStore,
     p: &ProviderProfile,

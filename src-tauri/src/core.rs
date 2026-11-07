@@ -69,6 +69,8 @@ pub struct Core {
     pub speech: Arc<SpeechService>,
     pub desktop: Box<dyn Desktop>,
     pub http: reqwest::Client,
+    /// Follows HTTPS redirects; used only for credential-free model downloads.
+    pub download_http: reqwest::Client,
     pub session: Mutex<SessionInner>,
     pub gesture: Mutex<Gesture>,
     pub generation: AtomicU64,
@@ -119,6 +121,7 @@ impl Core {
             speech,
             desktop,
             http: crate::providers::http_client(),
+            download_http: crate::providers::download_client(),
             session: Mutex::new(SessionInner::new()),
             gesture: Mutex::new(Gesture::default()),
             generation: AtomicU64::new(0),

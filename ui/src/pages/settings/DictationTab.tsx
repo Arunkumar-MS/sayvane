@@ -86,7 +86,7 @@ function ModelCard({ model: m, active }: { model: ModelInfo; active: boolean }) 
         <div className="model-title">
           <span className="model-label">{m.label}</span>
           {m.isDefault && <span className="tag tag-accent">Recommended</span>}
-          {active && <span className="tag">In use</span>}
+          {active && <span className="tag tag-nowrap">In use</span>}
         </div>
         <span className="model-size">{formatBytes(m.sizeBytes)}</span>
       </div>

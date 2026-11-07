@@ -7,3 +7,4 @@ src-tauri/binaries/*
 speech-worker/build/
 .DS_Store
 *.log
+dist/

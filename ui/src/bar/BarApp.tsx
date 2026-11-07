@@ -80,7 +80,7 @@ export function BarApp() {
           <div className="bar-nub" aria-hidden />
           <div className="bar capsule-idle">
             <BarButton label="Start dictation" tone="plain" onClick={() => void api.startDictation("handsFree").catch(() => undefined)}>
-              <Mic size={15} aria-hidden />
+              <Mic size={13} aria-hidden />
             </BarButton>
             <span className="bar-hint">{hint}</span>
           </div>
@@ -126,11 +126,11 @@ function BarContent({ session }: { session: SessionView }) {
       return (
         <>
           <span className="bar-icon" aria-hidden>
-            <LoaderCircle size={15} className="spin" />
+            <LoaderCircle size={13} className="spin" />
           </span>
-          <Waveform bars={14} active={false} muted className="bar-wave" />
+          <Waveform bars={11} active={false} muted className="bar-wave" />
           <BarButton label="Cancel" tone="cancel" onClick={cancel}>
-            <X size={15} aria-hidden />
+            <X size={13} strokeWidth={2.25} aria-hidden />
           </BarButton>
         </>
       );
@@ -138,16 +138,17 @@ function BarContent({ session }: { session: SessionView }) {
       return (
         <>
           <BarButton label="Cancel" tone="cancel" onClick={cancel}>
-            <X size={15} aria-hidden />
+            <X size={13} strokeWidth={2.25} aria-hidden />
           </BarButton>
-          <Waveform bars={15} active className="bar-wave" />
+          <span className="bar-rec-dot" aria-hidden />
+          <Waveform bars={11} active className="bar-wave" />
           {session.mode === "handsFree" && (
             <span className="bar-timer" aria-label="Elapsed">
               {formatTimer(elapsed)}
             </span>
           )}
           <BarButton label="Finish" tone="finish" onClick={() => void api.finishDictation().catch(() => undefined)}>
-            <Square size={10} fill="currentColor" aria-hidden />
+            <Square size={8} fill="currentColor" strokeWidth={0} aria-hidden />
           </BarButton>
         </>
       );
@@ -155,11 +156,11 @@ function BarContent({ session }: { session: SessionView }) {
       return (
         <>
           <span className="bar-polish-orb" aria-hidden>
-            <Sparkles size={13} />
+            <Sparkles size={9} />
           </span>
           <span className="bar-label is-polish">Polishing</span>
           <BarButton label="Cancel" tone="cancel" onClick={cancel}>
-            <X size={15} aria-hidden />
+            <X size={13} strokeWidth={2.25} aria-hidden />
           </BarButton>
         </>
       );
@@ -179,7 +180,7 @@ function BarContent({ session }: { session: SessionView }) {
           <span className="bar-label is-shimmer">{label}</span>
           {session.phase !== "delivering" && (
             <BarButton label="Cancel" tone="cancel" onClick={cancel}>
-              <X size={15} aria-hidden />
+              <X size={13} strokeWidth={2.25} aria-hidden />
             </BarButton>
           )}
         </>
@@ -191,7 +192,7 @@ function BarContent({ session }: { session: SessionView }) {
 function ResultContent({ result }: { result: NonNullable<SessionView["result"]> }) {
   const [copied, setCopied] = useState(false);
   const icon =
-    result.tone === "success" ? <CircleCheck size={15} /> : result.tone === "info" ? <Info size={15} /> : result.tone === "warning" ? <CircleAlert size={15} /> : <CircleX size={15} />;
+    result.tone === "success" ? <CircleCheck size={14} /> : result.tone === "info" ? <Info size={14} /> : result.tone === "warning" ? <CircleAlert size={14} /> : <CircleX size={14} />;
   return (
     <>
       <span className={cx("bar-result-icon", `tone-${result.tone}`)} aria-hidden>
@@ -209,11 +210,11 @@ function ResultContent({ result }: { result: NonNullable<SessionView["result"]> 
             void p.then(() => setCopied(true)).catch(() => undefined);
           }}
         >
-          {copied ? <Check size={14} aria-hidden /> : <Copy size={14} aria-hidden />}
+          {copied ? <Check size={13} aria-hidden /> : <Copy size={13} aria-hidden />}
         </BarButton>
       )}
       <BarButton label="Open History" tone="plain" onClick={() => void api.openMain("history").catch(() => undefined)}>
-        <History size={14} aria-hidden />
+        <History size={13} aria-hidden />
       </BarButton>
     </>
   );

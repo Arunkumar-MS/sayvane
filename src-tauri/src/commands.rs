@@ -134,7 +134,7 @@ pub fn install_model(core: State<CoreRef>, id: String) -> R<()> {
     let c = core.inner().clone();
     tauri::async_runtime::spawn(async move {
         let emit = |m: ModelInfo| c.emit(AppEvent::ModelDownloadProgress { model: m });
-        let result = c.models.download(&c.http, &id, &emit).await;
+        let result = c.models.download(&c.download_http, &id, &emit).await;
         if result.is_ok() {
             c.refresh_engine_status();
             if c.settings().model_id == id {

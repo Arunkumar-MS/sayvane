@@ -18,9 +18,9 @@ use tauri_plugin_global_shortcut::{GlobalShortcutExt, Shortcut, ShortcutState};
 
 pub const MAIN: &str = "main";
 pub const BAR: &str = "bar";
-const BAR_W: f64 = 440.0;
-const BAR_H: f64 = 92.0;
-const BAR_MARGIN: f64 = 6.0;
+const BAR_W: f64 = 340.0;
+const BAR_H: f64 = 56.0;
+const BAR_MARGIN: f64 = 2.0;
 
 pub fn core(app: &AppHandle) -> Option<CoreRef> {
     app.try_state::<CoreRef>().map(|s| s.inner().clone())
@@ -373,7 +373,8 @@ pub fn create_bar(app: &AppHandle, core: &CoreRef) -> tauri::Result<()> {
             .becomes_key_only_if_needed(true)
             .collection_behavior(CollectionBehavior::new().can_join_all_spaces().full_screen_auxiliary().stationary())
             .style_mask(StyleMask::empty().borderless().nonactivating_panel())
-            .with_window(|w| w.decorations(false).resizable(false).skip_taskbar(true).shadow(false).focused(false))
+            // The webview must be transparent too; the panel option alone only clears the NSPanel.
+            .with_window(|w| w.transparent(true).decorations(false).resizable(false).skip_taskbar(true).shadow(false).focused(false))
             .build()?;
         panel.show();
     }

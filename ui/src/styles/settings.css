@@ -809,3 +809,8 @@
 .danger-confirm .input {
   width: 160px;
 }
+
+.tag-nowrap {
+  white-space: nowrap;
+  flex: none;
+}

@@ -358,6 +358,28 @@ mod tests {
         assert_eq!(std::fs::read_dir(dir.path()).unwrap().count(), 1);
     }
 
+    /// Network check that the real model URL resolves through its CDN redirect.
+    /// Run with `cargo test -- --ignored model_url_follows_redirect`.
+    #[test]
+    #[ignore]
+    fn model_url_follows_redirect() {
+        let m = find("tiny").unwrap();
+        let rt = tokio::runtime::Builder::new_current_thread().enable_all().build().unwrap();
+        rt.block_on(async {
+            let no_redirect = crate::providers::http_client().get(&m.url).send().await.unwrap();
+            assert!(no_redirect.status().is_redirection(), "host redirects ({})", no_redirect.status());
+            let r = crate::providers::download_client()
+                .get(&m.url)
+                .header("Range", "bytes=0-3")
+                .send()
+                .await
+                .unwrap();
+            assert!(r.status().is_success(), "status {}", r.status());
+            let body = r.bytes().await.unwrap();
+            assert_eq!(body.len(), 4);
+        });
+    }
+
     #[test]
     fn a_file_without_marker_is_not_installed() {
         let dir = tempfile::tempdir().unwrap();
