@@ -15,7 +15,7 @@ wording ("speech engine", "local recognition").
 | nlohmann/json | `v3.12.0` single header, vendored at `vendor/nlohmann/json.hpp` | SHA-256 `aaf127c04cb31c406e5b04a63f1ae89369fccde6d8fa7cdda1ed4f32dfc5de63` |
 | CMake | 3.21 or newer (verified with 4.4.5) | |
 | macOS toolchain | Xcode / Command Line Tools. Release builds should use a current Xcode SDK; verified locally with Apple clang 12 and the macOS 11.0 SDK | |
-| Windows toolchain | Visual Studio 2022 (MSVC v143) Build Tools, x64 | |
+| Windows toolchain | Visual Studio 2022 (MSVC v143) Build Tools, x64 or ARM64 | |
 
 Model weights are not part of the build. See `models/manifest.json`, which
 lists URLs, sizes and SHA-256 digests from Hugging Face `ggerganov/whisper.cpp`.

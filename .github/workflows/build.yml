@@ -86,7 +86,16 @@ jobs:
             target: x86_64-pc-windows-msvc
             bundles: nsis
             arch: x64
+            pe: x64
             asset: Sayvane-Windows-x64-Setup.exe
+          # Native ARM64 runner: the real-model smoke test below runs on ARM hardware.
+          - name: Windows ARM64
+            runner: windows-11-arm
+            target: aarch64-pc-windows-msvc
+            bundles: nsis
+            arch: arm64
+            pe: arm64
+            asset: Sayvane-Windows-ARM64-Setup.exe
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 45
@@ -102,6 +111,11 @@ jobs:
         with:
           node-version: 22.18.0
           cache: pnpm
+
+      - uses: actions/setup-python@v6
+        if: runner.os == 'Windows' && matrix.arch == 'arm64'
+        with:
+          python-version: "3.12"
 
       - name: Rust toolchain
         run: |
@@ -130,7 +144,7 @@ jobs:
       - name: Build speech worker (Windows)
         if: runner.os == 'Windows' && steps.worker-cache.outputs.cache-hit != 'true'
         shell: pwsh
-        run: scripts/build-worker.ps1
+        run: scripts/build-worker.ps1 -Target ${{ matrix.target }}
 
       - name: Cache test model
         uses: actions/cache@v5
@@ -147,7 +161,7 @@ jobs:
             test "$(lipo -archs "$f")" = "${{ matrix.arch }}"
             otool -l "$f" | grep -A3 LC_BUILD_VERSION | grep -q "minos 13.0"
           else
-            file "$f" | grep -q "x86-64"
+            python3 scripts/check-pe-arch.py ${{ matrix.pe }} "$f"
           fi
 
       - name: Worker smoke test (real model)
@@ -195,19 +209,7 @@ jobs:
             ! otool -L "$app"/Contents/MacOS/* | grep -E "/usr/local|/opt/homebrew|/Users/"
           else
             ls -l $base/bundle/nsis/
-            python3 - "$base" <<'PY'
-          import glob, struct, sys
-          exes = glob.glob(sys.argv[1] + "/*.exe")
-          assert exes, "no .exe found in " + sys.argv[1]
-          for path in exes:
-              with open(path, "rb") as f:
-                  data = f.read(4096)
-              offset = struct.unpack_from("<I", data, 0x3C)[0]
-              assert data[offset:offset + 4] == b"PE\0\0", path + " is not a PE file"
-              machine = struct.unpack_from("<H", data, offset + 4)[0]
-              print(path, hex(machine))
-              assert machine == 0x8664, path + " is not x86-64"
-          PY
+            python3 scripts/check-pe-arch.py ${{ matrix.pe }} $base/*.exe
           fi
 
       # Fixed file names let the website link to releases/latest/download/<name>,
@@ -269,7 +271,8 @@ jobs:
           | --- | --- |
           | Mac, Apple Silicon (M1 and later) | `Sayvane-macOS-AppleSilicon.dmg` |
           | Mac, Intel | `Sayvane-macOS-Intel.dmg` |
-          | Windows 10 22H2 / 11, 64 bit | `Sayvane-Windows-x64-Setup.exe` |
+          | Windows 10 22H2 / 11, 64 bit (Intel or AMD) | `Sayvane-Windows-x64-Setup.exe` |
+          | Windows 11 on ARM (Snapdragon and similar) | `Sayvane-Windows-ARM64-Setup.exe` |
 
           Verify a download against `SHA256SUMS.txt`. The source code is `Sayvane-source.zip`.
 

@@ -2,13 +2,14 @@
 .SYNOPSIS
   Builds the bundled local speech worker (sayvane-speech) for Windows x64 with
   MSVC and places it where Tauri expects sidecars:
-  src-tauri\binaries\sayvane-speech-x86_64-pc-windows-msvc.exe
+  src-tauri\binaries\sayvane-speech-<target>.exe
 
 .PARAMETER Target
-  Target triple. Only x86_64-pc-windows-msvc is supported.
+  Target triple: x86_64-pc-windows-msvc (default) or aarch64-pc-windows-msvc
+  (Windows on ARM; build it on an ARM64 machine with the MSVC ARM64 tools).
 
 .PARAMETER CpuLevel
-  x86-64 instruction level compiled into the engine:
+  x86-64 instruction level compiled into the engine (ignored for ARM64):
     sse42  (default) conservative, runs on practically every Windows 10 x64 PC
     avx2   Haswell (2013+) and newer; faster, refuses to run on older CPUs
     native build-machine tuning, never ship
@@ -32,8 +33,10 @@ param(
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 
-if ($Target -ne "x86_64-pc-windows-msvc") {
-    throw "Unsupported target '$Target' (expected x86_64-pc-windows-msvc)."
+$Arch = switch ($Target) {
+    "x86_64-pc-windows-msvc"  { @{ Generator = "x64";   Machine = 0x8664; Label = "x64" } }
+    "aarch64-pc-windows-msvc" { @{ Generator = "ARM64"; Machine = 0xAA64; Label = "ARM64" } }
+    default { throw "Unsupported target '$Target' (expected x86_64-pc-windows-msvc or aarch64-pc-windows-msvc)." }
 }
 
 $Root = Resolve-Path (Join-Path $PSScriptRoot "..")
@@ -57,9 +60,11 @@ Write-Host "Using cmake: $Cmake"
 
 $cfg = @(
     "-S", $Src, "-B", $BuildDir,
-    "-A", "x64",
-    "-DSAYVANE_X86_LEVEL=$CpuLevel"
+    "-A", $Arch.Generator
 )
+if ($Arch.Generator -eq "x64") {
+    $cfg += "-DSAYVANE_X86_LEVEL=$CpuLevel"
+}
 if ($env:SAYVANE_ENGINE_TARBALL) {
     $cfg += "-DSAYVANE_ENGINE_TARBALL=$($env:SAYVANE_ENGINE_TARBALL)"
 }
@@ -74,15 +79,15 @@ if (-not (Test-Path $Built)) { $Built = Join-Path $BuildDir "sayvane-speech.exe"
 New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
 Copy-Item -Force $Built $Out
 
-# Verify architecture: PE machine type must be AMD64 (0x8664).
+# Verify architecture: the PE machine type must match the target.
 $bytes = [System.IO.File]::ReadAllBytes($Out)
 $peOffset = [BitConverter]::ToInt32($bytes, 0x3C)
 $machine = [BitConverter]::ToUInt16($bytes, $peOffset + 4)
-if ($machine -ne 0x8664) {
-    throw ("Unexpected PE machine type 0x{0:X4} (expected 0x8664 / x64)." -f $machine)
+if ($machine -ne $Arch.Machine) {
+    throw ("Unexpected PE machine type 0x{0:X4} (expected 0x{1:X4} / {2})." -f $machine, $Arch.Machine, $Arch.Label)
 }
 Write-Host "Built: $Out"
-Write-Host ("  PE machine: 0x{0:X4} (x64)" -f $machine)
+Write-Host ("  PE machine: 0x{0:X4} ({1})" -f $machine, $Arch.Label)
 
 # Verify dynamic dependencies: only OS DLLs (no VC++ runtime, no OpenMP, no ggml DLLs).
 $dumpbin = Get-Command dumpbin -ErrorAction SilentlyContinue

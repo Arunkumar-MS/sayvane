@@ -7,7 +7,7 @@
 **Speak where you type.** Private, on-device voice dictation for macOS and Windows.
 
 ![macOS 13+](https://img.shields.io/badge/macOS-13%2B-black?logo=apple)
-![Windows 10/11](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?logo=windows)
+![Windows 10/11 x64 and ARM64](https://img.shields.io/badge/Windows-10%20%7C%2011%20%C2%B7%20x64%20%2B%20ARM64-0078D4?logo=windows)
 ![License: MIT](https://img.shields.io/badge/license-MIT-E8573A)
 ![Built with Tauri](https://img.shields.io/badge/built%20with-Tauri%202-24C8DB?logo=tauri)
 
@@ -180,7 +180,7 @@ your clipboard or another app.
 | macOS integration | Accessibility API, CGEvent tap, NSPasteboard, NSPanel |
 | Windows integration | UI Automation, SendInput, Win32 clipboard |
 | Storage | SQLite (WAL) with versioned migrations, atomic file writes |
-| CI | GitHub Actions on native runners for Apple Silicon, Intel Mac and Windows x64 |
+| CI | GitHub Actions on native runners for Apple Silicon, Intel Mac, Windows x64 and Windows ARM64 |
 
 ## Project layout
 
@@ -226,6 +226,7 @@ saved keys.
 | macOS Intel | ✅ Builds, runs, tested on real hardware |
 | macOS Apple Silicon | 🟡 Built by CI on every push; needs hands-on testing |
 | Windows x64 | 🟡 Built by CI on every push; needs hands-on testing |
+| Windows ARM64 | 🟡 Built natively by CI on an ARM64 runner (worker smoke test runs there); needs hands-on testing on a real device |
 
 See [`docs/compatibility.md`](docs/compatibility.md) for the full test matrix. Hands-on
 reports from Apple Silicon and Windows users are especially welcome.
