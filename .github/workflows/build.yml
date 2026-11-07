@@ -1,15 +1,68 @@
 name: build
 
+# Every merge to main that changes the app builds all three installers, then cuts the
+# next version: tag, GitHub release, installers, checksums and a source zip. Website,
+# docs and Markdown-only changes are ignored. Put [skip release] in a commit message
+# to build without releasing.
 on:
   push:
+    branches: [main]
+    paths-ignore: ["site/**", "docs/**", "**.md", ".claude/**", ".agents/**", "LICENSE"]
   pull_request:
+    paths-ignore: ["site/**", "docs/**", "**.md", ".claude/**", ".agents/**", "LICENSE"]
   workflow_dispatch:
 
 permissions:
   contents: read
 
+# Releases are serialized so two merges can never pick the same version.
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
+  version:
+    name: Next version
+    runs-on: ubuntu-24.04
+    outputs:
+      release: ${{ steps.v.outputs.release }}
+      version: ${{ steps.v.outputs.version }}
+      tag: ${{ steps.v.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - id: v
+        shell: bash
+        env:
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          release=false
+          if [ "${{ github.ref }}" = "refs/heads/main" ] && [ "${{ github.event_name }}" != "pull_request" ]; then
+            release=true
+          fi
+          case "$COMMIT_MESSAGE" in *"[skip release]"*) release=false ;; esac
+
+          # Bump the patch of the newest tag. Raising "version" in tauri.conf.json past
+          # the newest tag (for example to 0.2.0) releases exactly that version instead.
+          conf=$(python3 -c "import json;print(json.load(open('src-tauri/tauri.conf.json'))['version'])")
+          latest=$(git tag -l 'v[0-9]*' --sort=-v:refname | head -n1 | sed 's/^v//')
+          if [ -z "$latest" ]; then
+            version="$conf"
+          elif [ "$(printf '%s\n%s\n' "$latest" "$conf" | sort -V | tail -n1)" = "$conf" ] && [ "$conf" != "$latest" ]; then
+            version="$conf"
+          else
+            IFS=. read -r a b c <<< "$latest"
+            version="$a.$b.$((c + 1))"
+          fi
+          echo "release=$release" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
+          echo "release=$release version=$version (latest tag: ${latest:-none}, tauri.conf: $conf)"
+
   build:
+    needs: version
     strategy:
       fail-fast: false
       matrix:
@@ -93,7 +146,15 @@ jobs:
         run: cargo test --locked --target ${{ matrix.target }}
 
       - name: Package
-        run: pnpm tauri build --target ${{ matrix.target }} --bundles ${{ matrix.bundles }}
+        shell: bash
+        run: |
+          args=""
+          if [ "${{ needs.version.outputs.release }}" = "true" ]; then
+            # Stamp the release version into the installer without editing the repo.
+            echo '{"version":"${{ needs.version.outputs.version }}"}' > release-version.json
+            args="--config release-version.json"
+          fi
+          pnpm tauri build --target ${{ matrix.target }} --bundles ${{ matrix.bundles }} $args
 
       - name: Verify bundle architecture
         shell: bash
@@ -136,31 +197,58 @@ jobs:
 
   release:
     name: Publish release
-    needs: build
-    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [version, build]
+    if: needs.version.outputs.release == 'true'
     runs-on: ubuntu-24.04
     permissions:
       contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TAG: ${{ needs.version.outputs.tag }}
+      VERSION: ${{ needs.version.outputs.version }}
     steps:
+      - uses: actions/checkout@v4
+
       - uses: actions/download-artifact@v4
         with:
           path: dist
           merge-multiple: true
 
-      - name: Checksums
-        working-directory: dist
+      - name: Source archive and checksums
         run: |
+          git archive --format=zip --prefix="sayvane-$VERSION/" -o dist/Sayvane-source.zip HEAD
+          cd dist
           sha256sum Sayvane-* > SHA256SUMS.txt
           cat SHA256SUMS.txt
 
-      - name: Create or update the GitHub release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          TAG: ${{ github.ref_name }}
+      - name: Release notes
+        run: |
+          cat > notes.md <<'EOF'
+          ## Download
+
+          | Computer | File |
+          | --- | --- |
+          | Mac, Apple Silicon (M1 and later) | `Sayvane-macOS-AppleSilicon.dmg` |
+          | Mac, Intel | `Sayvane-macOS-Intel.dmg` |
+          | Windows 10 22H2 / 11, 64 bit | `Sayvane-Windows-x64-Setup.exe` |
+
+          Verify a download against `SHA256SUMS.txt`. The source code is `Sayvane-source.zip`.
+
+          These builds are not code signed yet. On a Mac, right click the app and choose Open the
+          first time. On Windows, choose More info, then Run anyway, in the SmartScreen prompt.
+
+          ## What changed
+          EOF
+
+      - name: Create tag and release
         run: |
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" dist/* --clobber
           else
-            gh release create "$TAG" dist/* --title "Sayvane $TAG" --generate-notes --latest
+            gh release create "$TAG" dist/* \
+              --target "$GITHUB_SHA" \
+              --title "Sayvane $VERSION" \
+              --notes-file notes.md --generate-notes \
+              --latest
           fi
