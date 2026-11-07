@@ -2,6 +2,11 @@
   "name": "sayvane",
   "private": true,
   "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Arunkumar-MS/sayvane.git"
+  },
   "type": "module",
   "packageManager": "pnpm@10.28.0",
   "scripts": {
