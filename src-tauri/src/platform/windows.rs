@@ -360,7 +360,10 @@ pub fn make_non_activating(hwnd: isize) {
     };
     unsafe {
         let h = HWND(hwnd as *mut core::ffi::c_void);
-        let ex = GetWindowLongPtrW(h, GWL_EXSTYLE);
-        SetWindowLongPtrW(h, GWL_EXSTYLE, ex | (WS_EX_NOACTIVATE.0 | WS_EX_TOOLWINDOW.0 | WS_EX_TOPMOST.0) as isize);
+        // On 32-bit Windows these "Ptr" functions take 32-bit values, so go through i64
+        // and let the call convert back to whatever width the target uses.
+        let ex = GetWindowLongPtrW(h, GWL_EXSTYLE) as i64;
+        let flags = (WS_EX_NOACTIVATE.0 | WS_EX_TOOLWINDOW.0 | WS_EX_TOPMOST.0) as i64;
+        SetWindowLongPtrW(h, GWL_EXSTYLE, (ex | flags) as _);
     }
 }
