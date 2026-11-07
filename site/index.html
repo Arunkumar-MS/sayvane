@@ -30,7 +30,7 @@
   <link rel="manifest" href="/site.webmanifest">
 
   <link rel="preload" href="/assets/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" as="image" href="/assets/shots/home-dark.webp" type="image/webp">
+  <link rel="preload" href="/assets/fonts/instrument-serif-italic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/styles.css">
 
   <script type="application/ld+json">
@@ -100,6 +100,8 @@
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor-glow" aria-hidden="true"></div>
 
   <header class="nav-wrap">
     <nav class="nav" aria-label="Primary">
@@ -107,13 +109,13 @@
         <img src="/assets/icon.svg" alt="" width="28" height="28">
         <span>Sayvane</span>
       </a>
-      <ul class="nav-links" id="nav-links">
-        <li><a href="#how">How it works</a></li>
+      <ul class="nav-links">
+        <li><a href="#story">How it works</a></li>
+        <li><a href="#features">Features</a></li>
         <li><a href="#privacy">Privacy</a></li>
-        <li><a href="#tour">Tour</a></li>
         <li><a href="#faq">FAQ</a></li>
       </ul>
-      <a class="btn btn-sm btn-primary nav-cta" href="#download">Download</a>
+      <a class="btn btn-sm btn-primary nav-cta magnetic" href="#download">Download</a>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
         <span></span><span></span>
       </button>
@@ -122,297 +124,300 @@
 
   <div class="mobile-menu" id="mobile-menu" hidden>
     <ul>
-      <li><a href="#how">How it works</a></li>
+      <li><a href="#story">How it works</a></li>
+      <li><a href="#features">Features</a></li>
       <li><a href="#privacy">Privacy</a></li>
-      <li><a href="#tour">Tour</a></li>
       <li><a href="#faq">FAQ</a></li>
       <li><a class="btn btn-md btn-primary" href="#download">Download Sayvane</a></li>
     </ul>
   </div>
 
   <main id="main">
-    <!-- Hero -->
+    <!-- ============ HERO ============ -->
     <section class="hero" aria-labelledby="hero-title">
-      <div class="aura" aria-hidden="true"></div>
-      <div class="container hero-inner">
-        <p class="eyebrow caption-1"><span class="dot" aria-hidden="true"></span>Private dictation for Mac and Windows</p>
-        <h1 id="hero-title" class="heading-1 hero-title">Say it the way<br>you mean it.</h1>
-        <p class="hero-sub body-lg">Hold one key and speak. Sayvane types your words into any app, and the listening happens on your own computer, never in the cloud.</p>
-        <div class="hero-actions">
-          <a class="btn btn-lg btn-primary" href="#download" data-os-cta>
+      <canvas class="ribbon" data-ribbon aria-hidden="true"></canvas>
+      <div class="hero-inner">
+        <p class="eyebrow"><span class="dot" aria-hidden="true"></span>Private dictation for Mac and Windows</p>
+        <h1 id="hero-title" class="hero-title" data-split>Say it the way you <em>mean it.</em></h1>
+        <p class="hero-sub reveal">Hold one key and talk. Sayvane listens on your own computer and types your words into whatever app you're in. No cloud. No account. No waiting.</p>
+
+        <div class="hero-try reveal" aria-live="polite">
+          <button class="hold" type="button" data-hold aria-describedby="hold-hint">
+            <span class="hold-ring" aria-hidden="true"></span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>
+            <span class="sr-only">Hold to try a dictation demo</span>
+          </button>
+          <p class="hold-hint" id="hold-hint"><span data-hold-label>Hold</span> <kbd>Space</kbd> or press the button to try it</p>
+          <p class="typed" data-typed><span class="typed-text" data-typed-text></span><span class="caret" aria-hidden="true"></span></p>
+        </div>
+
+        <div class="hero-actions reveal">
+          <a class="btn btn-lg btn-primary magnetic" href="#download">
             <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 19.5h14"/></svg>
             <span data-os-label>Download Sayvane</span>
           </a>
-          <a class="link-quiet body-5" href="#how">See how it works</a>
+          <a class="link-quiet" href="#story">Watch it work <span aria-hidden="true">↓</span></a>
         </div>
-        <ul class="proof caption-2" aria-label="At a glance">
-          <li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Works offline</li>
-          <li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>No account</li>
-          <li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Never hits send</li>
-        </ul>
       </div>
+    </section>
 
-      <!-- Live demo: a text field filling as someone speaks -->
+    <!-- ============ MARQUEE ============ -->
+    <section class="marquee" aria-label="Works wherever you can type">
+      <div class="marquee-track" aria-hidden="true">
+        <span>Slack</span><i></i><span>Mail</span><i></i><span>Notion</span><i></i><span>Google Docs</span><i></i><span>Linear</span><i></i><span>VS Code</span><i></i><span>Messages</span><i></i><span>Figma</span><i></i><span>Outlook</span><i></i><span>Obsidian</span><i></i>
+        <span>Slack</span><i></i><span>Mail</span><i></i><span>Notion</span><i></i><span>Google Docs</span><i></i><span>Linear</span><i></i><span>VS Code</span><i></i><span>Messages</span><i></i><span>Figma</span><i></i><span>Outlook</span><i></i><span>Obsidian</span><i></i>
+      </div>
+      <p class="sr-only">Works in any app with a text field: chat, mail, docs, notes, browsers and code editors.</p>
+    </section>
+
+    <!-- ============ PINNED STORY ============ -->
+    <section class="story" id="story" aria-labelledby="story-title" data-story>
+      <div class="story-sticky">
+        <div class="story-copy">
+          <p class="kicker">How it works</p>
+          <h2 id="story-title" class="h2">From a messy thought<br>to a <em>clean sentence.</em></h2>
+          <ol class="story-steps">
+            <li data-step="0"><span>01</span><div><b>You talk</b><small>Hold <kbd>fn</kbd> on a Mac or <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Space</kbd> on Windows. Ramble. Correct yourself.</small></div></li>
+            <li data-step="1"><span>02</span><div><b>Your computer listens</b><small>Speech is transcribed on your own processor. It works with the WiFi off.</small></div></li>
+            <li data-step="2"><span>03</span><div><b>Polish, if you want it</b><small>Filler words and false starts disappear. Off until you turn it on.</small></div></li>
+            <li data-step="3"><span>04</span><div><b>It lands where you were</b><small>Typed into the field you started in. Never sent for you.</small></div></li>
+          </ol>
+          <div class="story-progress" aria-hidden="true"><i data-story-bar></i></div>
+        </div>
+
+        <div class="story-stage" aria-hidden="true">
+          <div class="app-win">
+            <div class="app-bar"><span class="lights"><i></i><i></i><i></i></span><span>Slack · #product</span></div>
+            <div class="app-body">
+              <div class="msg">
+                <span class="avatar">MR</span>
+                <div><b>Maya Reyes</b><p>Can everyone make the design review on Thursday?</p></div>
+              </div>
+              <div class="composer">
+                <p class="story-text" data-story-text></p>
+                <span class="send" title="Sayvane never presses send"><svg viewBox="0 0 24 24"><path d="M4 12 20 4l-6 16-2.5-6.5L4 12Z"/></svg></span>
+              </div>
+            </div>
+            <div class="toast" data-story-toast><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Inserted in Slack · not sent</div>
+          </div>
+          <div class="fbar" data-story-bar-ui>
+            <span class="fbar-dot"></span>
+            <span class="fbar-wave" data-story-wave></span>
+            <span class="fbar-label" data-story-label>Hold fn</span>
+            <span class="fbar-time" data-story-time>0:00</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ STATEMENT ============ -->
+    <section class="statement" aria-label="Our promise">
+      <p class="statement-text" data-words>Your voice is <em>personal.</em> So Sayvane hears it on your computer, keeps it on your computer, and sends it <em>nowhere</em> unless you ask.</p>
+    </section>
+
+    <!-- ============ FEATURES ============ -->
+    <section class="section" id="features" aria-labelledby="features-title">
       <div class="container">
-        <figure class="stage" aria-label="Animated example of Sayvane typing dictated words into an app">
-          <div class="stage-device">
-          <div class="stage-window">
-            <div class="window-bar" aria-hidden="true">
-              <span class="lights"><i></i><i></i><i></i></span>
-              <span class="window-app caption-4" data-demo-app>Slack</span>
+        <p class="kicker reveal">What you get</p>
+        <h2 id="features-title" class="h2 reveal">Small app.<br><em>Big exhale.</em></h2>
+
+        <div class="bento">
+          <article class="tile tile-bar spot reveal">
+            <div class="tile-copy">
+              <h3>A bar that never steals focus</h3>
+              <p>A tiny capsule floats above your Dock or taskbar. It shows your voice while you talk, and your cursor never moves.</p>
             </div>
-            <div class="window-body">
-              <p class="demo-to caption-2" data-demo-to>#design</p>
-              <p class="demo-text body-lg" aria-live="off"><span data-demo-text></span><span class="caret" aria-hidden="true"></span></p>
+            <div class="tile-visual bar-cycle" data-bar-cycle>
+              <div class="mini-desk">
+                <span class="mini-line"></span><span class="mini-line short"></span><span class="mini-line mid"><b class="mini-caret"></b></span>
+              </div>
+              <div class="cap" data-cap>
+                <span class="cap-dot"></span>
+                <span class="cap-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                <span class="cap-label" data-cap-label>Listening</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="tile tile-offline spot reveal">
+            <div class="tile-visual offline-viz">
+              <svg class="wifi" viewBox="0 0 48 48" aria-hidden="true"><path d="M6 18a26 26 0 0 1 36 0M12 25a17 17 0 0 1 24 0M18 32a8.5 8.5 0 0 1 12 0"/><circle cx="24" cy="38" r="2.5"/><path class="slash" d="M8 8l32 32"/></svg>
+              <span class="offline-chip">Still typing</span>
+            </div>
+            <h3>Works with the WiFi off</h3>
+            <p>On a plane, in a basement, behind a strict firewall. Recognition runs on your own machine.</p>
+          </article>
+
+          <article class="tile tile-send spot reveal">
+            <div class="tile-visual send-viz">
+              <span class="send-field">Sounds good, see you Friday.</span>
+              <span class="send-btn">Send</span>
+              <span class="ghost-cursor"></span>
+              <span class="stop-label">We stop here.</span>
+            </div>
+            <h3>Never presses send</h3>
+            <p>Sayvane types and stops. You always read it first. Switch windows mid sentence and it holds the text for you.</p>
+          </article>
+
+          <article class="tile tile-keys spot reveal">
+            <div class="tile-visual keys-viz">
+              <span class="key key-fn">fn</span>
+              <span class="ripple"></span>
+            </div>
+            <h3>One key. Hold and talk.</h3>
+            <p>Hold to talk, release to finish. Double tap for hands free. Every shortcut can be changed.</p>
+          </article>
+
+          <article class="tile tile-history spot reveal">
+            <div class="tile-visual stack">
+              <div class="card-h"><b>12:47</b> Can we pair on the permissions step tomorrow?</div>
+              <div class="card-h"><b>12:11</b> Move the pricing table closer to the top.</div>
+              <div class="card-h"><b>10:54</b> Repot the fig tree, call Grandma about December.</div>
+            </div>
+            <h3>Nothing gets lost</h3>
+            <p>Every take is saved before it's transcribed. Search it, copy it, or recover it if something fails.</p>
+          </article>
+
+          <article class="tile tile-polish spot reveal">
+            <div class="tile-visual polish-viz" data-polish>
+              <p><s>um</s> <s>so</s> I think <s>like</s> we should ship it <s>uh</s> Friday<span class="dotp">.</span></p>
+            </div>
+            <h3>Polish, only if you want it</h3>
+            <p>Clean up filler and punctuation with a provider you choose. Off by default. Your original is always kept.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TOUR ============ -->
+    <section class="section tour" id="tour" aria-labelledby="tour-title">
+      <div class="container">
+        <p class="kicker reveal">Take a look</p>
+        <h2 id="tour-title" class="h2 reveal">Calm, clear, and<br><em>yours to keep.</em></h2>
+        <div class="tabs reveal" role="tablist" aria-label="App screens">
+          <button class="tab" role="tab" id="tab-home" aria-controls="panel-home" aria-selected="true">Home</button>
+          <button class="tab" role="tab" id="tab-history" aria-controls="panel-history" aria-selected="false" tabindex="-1">History</button>
+          <button class="tab" role="tab" id="tab-settings" aria-controls="panel-settings" aria-selected="false" tabindex="-1">Settings</button>
+        </div>
+        <div class="tilt-wrap" data-tilt>
+          <div class="shot-frame">
+            <div class="shot-panel" role="tabpanel" id="panel-home" aria-labelledby="tab-home">
+              <img src="/assets/shots/home-dark.webp" width="1600" height="1047" loading="lazy" alt="Sayvane Home screen with a Record a note button, weekly statistics for words, speaking speed, time saved and streak, and recent dictations inserted into Slack and Mail.">
+            </div>
+            <div class="shot-panel" role="tabpanel" id="panel-history" aria-labelledby="tab-history" hidden>
+              <img src="/assets/shots/history-dark.webp" width="1600" height="1047" loading="lazy" alt="Sayvane History screen listing today's dictations with timestamps, destination apps, insertion status, and a Recover button on an entry whose audio was saved.">
+            </div>
+            <div class="shot-panel" role="tabpanel" id="panel-settings" aria-labelledby="tab-settings" hidden>
+              <img src="/assets/shots/settings-dark.webp" width="1600" height="1047" loading="lazy" alt="Sayvane Settings screen with tabs for Dictation, Shortcuts, AI Polish, and Privacy, showing the installed speech model and language options.">
             </div>
           </div>
-          <div class="pill" data-pill aria-hidden="true">
-            <span class="pill-rec"></span>
-            <span class="pill-wave" data-wave></span>
-            <span class="pill-label caption-4" data-pill-label>Listening</span>
-          </div>
-          </div>
-          <figcaption class="caption-2 stage-cap">Hold <kbd>fn</kbd> and speak. Release, and your words appear where your cursor was.</figcaption>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PRIVACY ============ -->
+    <section class="section privacy" id="privacy" aria-labelledby="privacy-title">
+      <div class="container privacy-grid">
+        <div>
+          <p class="kicker reveal">Privacy</p>
+          <h2 id="privacy-title" class="h2 reveal">The cloud<br><em>never hears you.</em></h2>
+          <p class="lead reveal">With AI polish off, which is the default, nothing leaves your computer. Not your audio, not your words, not your History.</p>
+          <ul class="facts reveal">
+            <li><b>Off</b><span>Audio, transcripts and History stay on your disk.</span></li>
+            <li><b>On</b><span>Only the current transcript's text goes to the provider you picked. Never audio, History, clipboard or app names.</span></li>
+          </ul>
+          <a class="link-quiet reveal" href="/privacy">Read the privacy details <span aria-hidden="true">→</span></a>
+        </div>
+
+        <figure class="vault reveal" aria-label="Diagram: your voice stays inside your computer; the connection to the cloud is blocked.">
+          <svg viewBox="0 0 420 420" aria-hidden="true">
+            <defs>
+              <radialGradient id="vg" cx="50%" cy="55%" r="50%">
+                <stop offset="0" stop-color="#e8573a" stop-opacity=".35"/>
+                <stop offset="1" stop-color="#e8573a" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <g class="cloud">
+              <path d="M300 92a26 26 0 0 1 50-6 20 20 0 0 1 22 30h-80a16 16 0 0 1 8-24Z"/>
+              <text x="332" y="140" text-anchor="middle">Cloud</text>
+            </g>
+            <path class="beam" d="M255 165 L318 122"/>
+            <g class="block" transform="translate(286 144)"><circle r="13"/><path d="M-5 -5l10 10M5 -5l-10 10"/></g>
+            <circle cx="200" cy="240" r="150" fill="url(#vg)"/>
+            <circle class="ring r1" cx="200" cy="240" r="128"/>
+            <circle class="ring r2" cx="200" cy="240" r="96"/>
+            <g class="orbit"><circle cx="200" cy="112" r="5"/></g>
+            <g class="orbit o2"><circle cx="200" cy="144" r="4"/></g>
+            <g class="orbit o3"><circle cx="328" cy="240" r="3.5"/></g>
+            <rect class="laptop" x="140" y="200" width="120" height="76" rx="10"/>
+            <path class="laptop-base" d="M122 288h156"/>
+            <g class="lap-wave">
+              <rect x="166" y="228" width="6" height="20" rx="3"/><rect x="178" y="220" width="6" height="36" rx="3"/><rect x="190" y="230" width="6" height="16" rx="3"/><rect x="202" y="216" width="6" height="44" rx="3"/><rect x="214" y="226" width="6" height="24" rx="3"/><rect x="226" y="232" width="6" height="12" rx="3"/>
+            </g>
+            <text class="vault-label" x="200" y="330" text-anchor="middle">Your computer</text>
+          </svg>
         </figure>
       </div>
     </section>
 
-    <!-- The feeling -->
-    <section class="section moments" aria-labelledby="moments-title">
-      <div class="container">
-        <p class="kicker caption-3 reveal">Why voice</p>
-        <h2 id="moments-title" class="heading-2 reveal">Your best thoughts don't wait<br>for your fingers to catch up.</h2>
-        <div class="moment-grid">
-          <article class="moment reveal">
-            <span class="moment-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z"/></svg></span>
-            <h3 class="heading-6">The idea that arrives mid stride</h3>
-            <p class="body-6">You know exactly what you want to say. By the time you've typed half of it, the shape of it is gone. Speak it while it's still warm.</p>
-          </article>
-          <article class="moment reveal">
-            <span class="moment-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M4 6.5h16v10H9l-5 4v-14Z"/></svg></span>
-            <h3 class="heading-6">The reply you keep rewriting</h3>
-            <p class="body-6">Some messages are easier to say out loud. Talk to the person the way you would across a table, and let the words land in the box.</p>
-          </article>
-          <article class="moment reveal">
-            <span class="moment-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M7 11V6.5a1.5 1.5 0 0 1 3 0V11m0-1.5v-5a1.5 1.5 0 0 1 3 0v5m0 0V6a1.5 1.5 0 0 1 3 0v6.5m0-3a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-1a6.5 6.5 0 0 1-5.4-2.9L3.4 14.5a1.5 1.5 0 0 1 2.4-1.8L7 14"/></svg></span>
-            <h3 class="heading-6">The hands that need a break</h3>
-            <p class="body-6">Long days at the keyboard add up. Lean back, look away from the screen, and keep working with your voice.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- How it works -->
-    <section class="section" id="how" aria-labelledby="how-title">
-      <div class="container">
-        <p class="kicker caption-3 reveal">How it works</p>
-        <h2 id="how-title" class="heading-2 reveal">Three moves.<br>No new app to learn.</h2>
-        <ol class="steps">
-          <li class="step reveal">
-            <span class="step-n caption-3">01</span>
-            <h3 class="heading-5">Put your cursor anywhere</h3>
-            <p class="body-6">Mail, Slack, a browser tab, your notes, a code comment. If you can type there, Sayvane can write there.</p>
-          </li>
-          <li class="step reveal">
-            <span class="step-n caption-3">02</span>
-            <h3 class="heading-5">Hold a key and talk</h3>
-            <p class="body-6">Hold <kbd>fn</kbd> on a Mac or <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Space</kbd> on Windows. A small bar shows your voice as you speak. Double tap for hands free.</p>
-          </li>
-          <li class="step reveal">
-            <span class="step-n caption-3">03</span>
-            <h3 class="heading-5">Let go. It's there.</h3>
-            <p class="body-6">Your words are transcribed on your computer and typed into the field you started in. Sayvane stops there, so you always read before you send.</p>
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    <!-- Tagline reveal -->
-    <section class="section tagline" aria-label="Our promise">
-      <div class="container">
-        <p class="heading-2 tagline-text" data-words>Your voice is personal. So Sayvane hears it on your computer, keeps it on your computer, and sends nothing unless you ask.</p>
-      </div>
-    </section>
-
-    <!-- Benefits bento -->
-    <section class="section" id="features" aria-labelledby="features-title">
-      <div class="container">
-        <p class="kicker caption-3 reveal">What you get</p>
-        <h2 id="features-title" class="heading-2 reveal">Built to disappear<br>into your day.</h2>
-        <div class="bento">
-          <article class="card card-wide reveal">
-            <div class="card-copy">
-              <h3 class="heading-5">A bar that stays out of your way</h3>
-              <p class="body-6">A small capsule rests above your Dock or taskbar. It shows a live waveform while you talk and never takes focus from the app you're writing in, so your cursor stays exactly where you left it.</p>
-            </div>
-            <div class="bar-demo" aria-hidden="true">
-              <div class="bar-state"><span class="mini-pill nub"></span><span class="caption-5">Idle</span></div>
-              <div class="bar-state"><span class="mini-pill rec"><i></i><b data-mini-wave></b></span><span class="caption-5">Recording</span></div>
-              <div class="bar-state"><span class="mini-pill busy"><b class="dots"><i></i><i></i><i></i></b><em class="caption-4">Transcribing locally</em></span><span class="caption-5">Working</span></div>
-            </div>
-          </article>
-          <article class="card reveal">
-            <span class="card-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M3 3l18 18M8.5 8.6A6 6 0 0 0 6 13M2 8.8A12.5 12.5 0 0 1 5.3 6.4m4.1-1.2A12.5 12.5 0 0 1 22 8.8m-3.6 3.6a6 6 0 0 0-2.5-1.9M12 18.5h.01"/></svg></span>
-            <h3 class="heading-6">Works with the WiFi off</h3>
-            <p class="body-6">Recognition runs on your own processor. On a plane, in a basement, behind a strict firewall: it still works.</p>
-          </article>
-          <article class="card reveal">
-            <span class="card-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3.5 5 6.5v5c0 4.3 2.9 8 7 9 4.1-1 7-4.7 7-9v-5l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
-            <h3 class="heading-6">Never presses send</h3>
-            <p class="body-6">Sayvane types and stops. It never hits Enter. Switch windows mid sentence and it holds the text for you instead of guessing.</p>
-          </article>
-          <article class="card reveal">
-            <span class="card-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 1 0 2.5-6M3.5 4v4h4M12 7.5V12l3 2"/></svg></span>
-            <h3 class="heading-6">Nothing gets lost</h3>
-            <p class="body-6">Every recording is saved before it's transcribed. Search your History, copy anything back, and recover a take if something fails.</p>
-          </article>
-          <article class="card reveal">
-            <span class="card-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v3m0 12v3M3 12h3m12 0h3M7.5 7.5l1.8 1.8m5.4 5.4 1.8 1.8m0-9-1.8 1.8m-5.4 5.4-1.8 1.8"/></svg></span>
-            <h3 class="heading-6">Polish, only if you want it</h3>
-            <p class="body-6">Turn on AI polish to clean up filler words and punctuation through a provider you pick. It's off until you say otherwise, and your original is always kept.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Product tour -->
-    <section class="section tour" id="tour" aria-labelledby="tour-title">
-      <div class="container">
-        <p class="kicker caption-3 reveal">Take a look</p>
-        <h2 id="tour-title" class="heading-2 reveal">Calm, clear, and<br>yours to keep.</h2>
-        <div class="tabs reveal" role="tablist" aria-label="App screens">
-          <button class="tab button-sm" role="tab" id="tab-home" aria-controls="panel-home" aria-selected="true">Home</button>
-          <button class="tab button-sm" role="tab" id="tab-history" aria-controls="panel-history" aria-selected="false" tabindex="-1">History</button>
-          <button class="tab button-sm" role="tab" id="tab-settings" aria-controls="panel-settings" aria-selected="false" tabindex="-1">Settings</button>
-        </div>
-        <div class="shot-frame reveal">
-          <div class="shot-panel" role="tabpanel" id="panel-home" aria-labelledby="tab-home">
-            <img src="/assets/shots/home-dark.webp" width="1600" height="1047" alt="Sayvane Home screen with a Record a note button, weekly statistics for words, speaking speed, time saved and streak, and recent dictations inserted into Slack and Mail.">
-            <p class="shot-note body-6">Home shows how much you've said this week, roughly how much typing time it saved, and your latest notes.</p>
-          </div>
-          <div class="shot-panel" role="tabpanel" id="panel-history" aria-labelledby="tab-history" hidden>
-            <img src="/assets/shots/history-dark.webp" width="1600" height="1047" loading="lazy" alt="Sayvane History screen listing today's dictations with timestamps, destination apps, insertion status, and a Recover button on an entry whose audio was saved.">
-            <p class="shot-note body-6">History keeps every take, searchable, with its original and polished text side by side.</p>
-          </div>
-          <div class="shot-panel" role="tabpanel" id="panel-settings" aria-labelledby="tab-settings" hidden>
-            <img src="/assets/shots/settings-dark.webp" width="1600" height="1047" loading="lazy" alt="Sayvane Settings screen with tabs for Dictation, Shortcuts, AI Polish, and Privacy, showing the installed speech model and language options.">
-            <p class="shot-note body-6">Settings lets you choose your model, language, microphone, shortcuts and how long recordings are kept.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Privacy -->
-    <section class="section" id="privacy" aria-labelledby="privacy-title">
-      <div class="container">
-        <p class="kicker caption-3 reveal">Privacy</p>
-        <h2 id="privacy-title" class="heading-2 reveal">Here's exactly what<br>leaves your computer.</h2>
-        <div class="privacy-grid">
-          <article class="card privacy-card reveal">
-            <p class="caption-3 tag tag-ok">AI polish off &middot; the default</p>
-            <h3 class="heading-4">Nothing.</h3>
-            <p class="body-6">Your audio, transcripts and History stay on your disk. No account, no analytics on what you say, no server of ours in the loop.</p>
-          </article>
-          <article class="card privacy-card reveal">
-            <p class="caption-3 tag">AI polish on &middot; your choice</p>
-            <h3 class="heading-4">One transcript.</h3>
-            <p class="body-6">Only the text of the current dictation goes to the provider you picked: OpenRouter, any compatible API, or a model running on your own machine.</p>
-            <ul class="never body-6">
-              <li>Never your audio</li>
-              <li>Never your History</li>
-              <li>Never your clipboard or app names</li>
-            </ul>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Download -->
+    <!-- ============ DOWNLOAD ============ -->
     <section class="section download" id="download" aria-labelledby="download-title">
       <div class="container">
-        <p class="kicker caption-3 reveal">Get Sayvane</p>
-        <h2 id="download-title" class="heading-2 reveal">Native on every<br>computer you use.</h2>
+        <p class="kicker reveal">Get Sayvane</p>
+        <h2 id="download-title" class="h2 reveal">Native on every<br><em>computer you use.</em></h2>
         <div class="platforms">
-          <article class="card platform reveal" data-platform="mac">
-            <span class="card-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M4.5 5.5h15v10h-15zM2.5 18.5h19"/></svg></span>
-            <h3 class="heading-5">macOS</h3>
-            <p class="body-6">macOS 13 Ventura or later. Separate native builds for Apple Silicon and Intel, no Rosetta needed.</p>
+          <article class="platform spot reveal" data-platform="mac">
+            <span class="plat-badge">macOS 13+</span>
+            <h3>Mac</h3>
+            <p>Separate native builds for Apple Silicon and Intel. No Rosetta needed.</p>
             <div class="platform-actions">
-              <a class="btn btn-md btn-primary" href="/download/mac-arm">Apple Silicon</a>
+              <a class="btn btn-md btn-primary magnetic" href="/download/mac-arm">Apple Silicon</a>
               <a class="btn btn-md btn-ghost" href="/download/mac-intel">Intel</a>
             </div>
-            <p class="caption-5 muted">Hold <kbd>fn</kbd> to talk. Double tap for hands free.</p>
+            <p class="small">Hold <kbd>fn</kbd> to talk. Double tap for hands free.</p>
           </article>
-          <article class="card platform reveal" data-platform="windows">
-            <span class="card-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M3.5 4.5h17v11h-17zM9 19.5h6M12 15.5v4"/></svg></span>
-            <h3 class="heading-5">Windows</h3>
-            <p class="body-6">Windows 10 22H2 or Windows 11 on x64 PCs. A native desktop app with fully configurable shortcuts.</p>
+          <article class="platform spot reveal" data-platform="windows">
+            <span class="plat-badge">Windows 10 22H2 · 11</span>
+            <h3>Windows</h3>
+            <p>A native x64 desktop app with fully configurable shortcuts.</p>
             <div class="platform-actions">
-              <a class="btn btn-md btn-primary" href="/download/windows">Windows x64</a>
+              <a class="btn btn-md btn-primary magnetic" href="/download/windows">Windows x64</a>
             </div>
-            <p class="caption-5 muted">Hold <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Space</kbd> to talk.</p>
+            <p class="small">Hold <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Space</kbd> to talk.</p>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- FAQ -->
+    <!-- ============ FAQ ============ -->
     <section class="section" id="faq" aria-labelledby="faq-title">
       <div class="container faq-wrap">
         <div>
-          <p class="kicker caption-3 reveal">Questions</p>
-          <h2 id="faq-title" class="heading-2 reveal">Good to know.</h2>
+          <p class="kicker reveal">Questions</p>
+          <h2 id="faq-title" class="h2 reveal">Good to <em>know.</em></h2>
         </div>
         <div class="faq reveal">
-          <details>
-            <summary class="title-2">Does Sayvane work offline?</summary>
-            <p class="body-6">Yes. Once you install a speech model, recognition runs entirely on your computer and works with the network disconnected. Models download only when you start the install, and you can also import a model file on machines that are always offline.</p>
-          </details>
-          <details>
-            <summary class="title-2">Is my voice sent to the cloud?</summary>
-            <p class="body-6">No. Audio is recorded and transcribed on your computer and saved in your local History. Nothing leaves the machine unless you turn on AI polishing, and even then only the text of the current transcript is sent to the provider you chose.</p>
-          </details>
-          <details>
-            <summary class="title-2">Which apps can I dictate into?</summary>
-            <p class="body-6">Any app with an editable text field: browsers, mail, chat apps, notes, editors and Electron apps. Sayvane inserts text into the field you were typing in when you started speaking. Password fields are refused.</p>
-          </details>
-          <details>
-            <summary class="title-2">Will Sayvane send my message by accident?</summary>
-            <p class="body-6">No. Sayvane never presses Return, Enter or a Send button. It types your words and stops. If you switch to a different window while it is working, automatic insertion pauses and you can copy or paste the result yourself.</p>
-          </details>
-          <details>
-            <summary class="title-2">What are the keyboard shortcuts?</summary>
-            <p class="body-6">On a Mac, hold <kbd>fn</kbd> to talk and release to finish, or double tap <kbd>fn</kbd> for hands free. On Windows, hold <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Space</kbd>, or press <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>Space</kbd> for hands free. Every shortcut can be changed, and <kbd>Esc</kbd> cancels.</p>
-          </details>
-          <details>
-            <summary class="title-2">Which computers are supported?</summary>
-            <p class="body-6">Macs with Apple Silicon or Intel processors on macOS 13 or later, and x64 PCs on Windows 10 22H2 or Windows 11. Each gets its own native build.</p>
-          </details>
-          <details>
-            <summary class="title-2">What does AI polish actually do?</summary>
-            <p class="body-6">It removes filler words and accidental repetition, applies your spoken corrections, fixes grammar and punctuation, and formats lists and paragraphs. It never summarizes or adds facts. It's off by default, and your original transcript is always kept so you can compare.</p>
-          </details>
-          <details>
-            <summary class="title-2">Do I need an account?</summary>
-            <p class="body-6">No. There's no account, no sign in and no hosted backend. Local dictation works without any AI provider credentials.</p>
-          </details>
-          <details>
-            <summary class="title-2">What if something goes wrong mid recording?</summary>
-            <p class="body-6">Your recording is saved to disk before transcription starts. If anything fails, the entry stays in History with its audio, and Recover transcribes it again.</p>
-          </details>
+          <details><summary>Does Sayvane work offline?</summary><p>Yes. Once you install a speech model, recognition runs entirely on your computer and works with the network disconnected. Models download only when you start the install, and you can also import a model file on machines that are always offline.</p></details>
+          <details><summary>Is my voice sent to the cloud?</summary><p>No. Audio is recorded and transcribed on your computer and saved in your local History. Nothing leaves the machine unless you turn on AI polishing, and even then only the text of the current transcript is sent to the provider you chose.</p></details>
+          <details><summary>Which apps can I dictate into?</summary><p>Any app with an editable text field: browsers, mail, chat apps, notes, editors and Electron apps. Sayvane inserts text into the field you were typing in when you started speaking. Password fields are refused.</p></details>
+          <details><summary>Will Sayvane send my message by accident?</summary><p>No. Sayvane never presses Return, Enter or a Send button. It types your words and stops. If you switch to a different window while it is working, automatic insertion pauses and you can copy or paste the result yourself.</p></details>
+          <details><summary>What are the keyboard shortcuts?</summary><p>On a Mac, hold <kbd>fn</kbd> to talk and release to finish, or double tap <kbd>fn</kbd> for hands free. On Windows, hold <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Space</kbd>, or press <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>Space</kbd> for hands free. Every shortcut can be changed, and <kbd>Esc</kbd> cancels.</p></details>
+          <details><summary>Which computers are supported?</summary><p>Macs with Apple Silicon or Intel processors on macOS 13 or later, and x64 PCs on Windows 10 22H2 or Windows 11. Each gets its own native build.</p></details>
+          <details><summary>What does AI polish actually do?</summary><p>It removes filler words and accidental repetition, applies your spoken corrections, fixes grammar and punctuation, and formats lists and paragraphs. It never summarizes or adds facts. It's off by default, and your original transcript is always kept so you can compare.</p></details>
+          <details><summary>Do I need an account?</summary><p>No. There's no account, no sign in and no hosted backend. Local dictation works without any AI provider credentials.</p></details>
+          <details><summary>What if something goes wrong mid recording?</summary><p>Your recording is saved to disk before transcription starts. If anything fails, the entry stays in History with its audio, and Recover transcribes it again.</p></details>
         </div>
       </div>
     </section>
 
-    <!-- Final CTA -->
-    <section class="section final" aria-labelledby="final-title">
-      <div class="aura aura-low" aria-hidden="true"></div>
-      <div class="container final-inner">
-        <img class="final-icon reveal" src="/assets/icon.svg" alt="" width="88" height="88">
-        <h2 id="final-title" class="heading-2 hero-title reveal">Say what you mean.<br>Then get back to your day.</h2>
-        <p class="body-lg muted reveal">Private, offline dictation for Mac and Windows. No account needed.</p>
+    <!-- ============ FINAL ============ -->
+    <section class="final" aria-labelledby="final-title">
+      <canvas class="ribbon ribbon-final" data-ribbon data-calm aria-hidden="true"></canvas>
+      <div class="final-inner">
+        <h2 id="final-title" class="final-title reveal">Just <em>speak.</em></h2>
+        <p class="final-sub reveal">Say what you mean. Then get back to your day.</p>
         <div class="hero-actions reveal">
-          <a class="btn btn-lg btn-primary" href="#download" data-os-cta>
+          <a class="btn btn-lg btn-primary magnetic" href="#download">
             <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 19.5h14"/></svg>
             <span data-os-label>Download Sayvane</span>
           </a>
@@ -423,16 +428,14 @@
 
   <footer class="footer">
     <div class="container footer-inner">
-      <a class="brand" href="/">
-        <img src="/assets/icon.svg" alt="" width="24" height="24">
-        <span>Sayvane</span>
-      </a>
-      <p class="caption-5 muted">Speak where you type.</p>
-      <ul class="footer-links caption-2">
+      <a class="brand" href="/"><img src="/assets/icon.svg" alt="" width="24" height="24"><span>Sayvane</span></a>
+      <p class="small">Speak where you type.</p>
+      <ul class="footer-links">
         <li><a href="/privacy">Privacy</a></li>
         <li><a href="#faq">FAQ</a></li>
+        <li><a href="https://github.com/Arunkumar-MS/sayvane">GitHub</a></li>
       </ul>
-      <p class="caption-5 muted">&copy; 2026 Sayvane</p>
+      <p class="small">&copy; 2026 Sayvane</p>
     </div>
   </footer>
 
