@@ -238,3 +238,12 @@ lines, unload, shutdown and stdin EOF. Fixtures are in `tests/fixtures/`:
   gates on SDK availability are compiled out. Release builds must run on an
   Apple Silicon machine with a current Xcode, and run the smoke test there.
 - x86_64-pc-windows-msvc: `build-worker.ps1` has **not been run yet**.
+
+## Windows on ARM64
+
+The ARM64 worker is built with MSVC. The engine's build refuses MSVC on ARM unless
+`GGML_NATIVE=ON`, which makes it probe the build machine's CPU. `CMakeLists.txt` turns
+that on but pre-answers the probes with a fixed baseline (Arm dot product and FMA; no
+i8mm, SVE or SME), so the binary does not depend on which CI machine built it. At
+startup `cpu_check.cpp` confirms the dot product is present and otherwise reports
+`unsupported_cpu`. Every ARM64 chip that can run Windows 11 (ARMv8.2 and newer) has it.

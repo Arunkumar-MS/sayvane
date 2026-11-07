@@ -112,11 +112,30 @@ set(GGML_LLAMAFILE           OFF CACHE BOOL "" FORCE)
 
 if(SAYVANE_IS_X86 AND SAYVANE_X86_LEVEL STREQUAL "native")
     set(GGML_NATIVE ON CACHE BOOL "" FORCE)
-else()
+elseif(NOT (MSVC AND NOT SAYVANE_IS_X86))
     set(GGML_NATIVE OFF CACHE BOOL "" FORCE)
 endif()
 
 set(SAYVANE_REQUIRED_CPU_FEATURES "")
+
+# Windows on ARM64 with MSVC. cl.exe has no -march for ARM, so the engine's build
+# only accepts GGML_NATIVE=ON there and then PROBES THE BUILD MACHINE, baking its
+# CPU features into the binary. A CI runner is a modern server core, so that could
+# crash older Windows ARM laptops. Instead we turn that mode on but answer every
+# probe ourselves with a fixed baseline: Arm dot product and FMA (present on every
+# ARM64 chip that can run Windows 11, ARMv8.2 and newer), and none of i8mm, SVE or
+# SME. cpu_check.cpp verifies the dot product at startup.
+if(MSVC AND NOT SAYVANE_IS_X86)
+    set(GGML_NATIVE ON CACHE BOOL "" FORCE)
+    foreach(_feat dotprod fma)
+        set(GGML_MACHINE_SUPPORTS_${_feat} ON CACHE BOOL "" FORCE)
+    endforeach()
+    foreach(_feat i8mm sve sme)
+        set(GGML_MACHINE_SUPPORTS_${_feat} OFF CACHE BOOL "" FORCE)
+    endforeach()
+    set(SAYVANE_REQUIRED_CPU_FEATURES SAYVANE_REQUIRE_ARM_DOTPROD)
+endif()
+
 if(SAYVANE_IS_X86)
     set(GGML_AVX512      OFF CACHE BOOL "" FORCE)
     set(GGML_AVX512_VBMI OFF CACHE BOOL "" FORCE)

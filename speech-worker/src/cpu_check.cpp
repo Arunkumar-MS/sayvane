@@ -12,6 +12,10 @@
 #endif
 #endif
 
+#if defined(_WIN32) && defined(SAYVANE_REQUIRE_ARM_DOTPROD)
+#include <windows.h>
+#endif
+
 namespace sayvane {
 
 #ifdef SAYVANE_X86
@@ -40,6 +44,13 @@ CpuSupport check_cpu_support() {
     CpuSupport out;
 #ifndef SAYVANE_X86
     out.level = "arm64";
+#if defined(_WIN32) && defined(SAYVANE_REQUIRE_ARM_DOTPROD)
+    // 43 = PF_ARM_V82_DP_INSTRUCTIONS_AVAILABLE (Arm dot product, ARMv8.2).
+    if (!IsProcessorFeaturePresent(43)) {
+        out.supported = false;
+        out.missing = "Arm dot product (ARMv8.2)";
+    }
+#endif
     return out;
 #else
 #if defined(SAYVANE_REQUIRE_AVX2)
