@@ -19,16 +19,19 @@ jobs:
             target: aarch64-apple-darwin
             bundles: app,dmg
             arch: arm64
+            asset: Sayvane-macOS-AppleSilicon.dmg
           - name: macOS Intel
             runner: macos-15-intel
             target: x86_64-apple-darwin
             bundles: app,dmg
             arch: x86_64
+            asset: Sayvane-macOS-Intel.dmg
           - name: Windows x64
             runner: windows-2022
             target: x86_64-pc-windows-msvc
             bundles: nsis
             arch: x64
+            asset: Sayvane-Windows-x64-Setup.exe
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.runner }}
     env:
@@ -109,10 +112,55 @@ jobs:
             file $base/*.exe | tee /dev/stderr | grep -q "x86-64"
           fi
 
+      # Fixed file names let the website link to releases/latest/download/<name>,
+      # which always resolves to the newest release.
+      - name: Collect installer
+        shell: bash
+        run: |
+          base=src-tauri/target/${{ matrix.target }}/release/bundle
+          mkdir -p dist
+          if [ "${{ runner.os }}" = "macOS" ]; then
+            src=$(ls $base/dmg/*.dmg)
+          else
+            src=$(ls $base/nsis/*-setup.exe)
+          fi
+          test "$(echo "$src" | wc -l)" -eq 1
+          cp "$src" "dist/${{ matrix.asset }}"
+          ls -l dist
+
       - uses: actions/upload-artifact@v4
         with:
-          name: sayvane-${{ matrix.target }}
-          path: |
-            src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg
-            src-tauri/target/${{ matrix.target }}/release/bundle/nsis/*.exe
+          name: ${{ matrix.asset }}
+          path: dist/${{ matrix.asset }}
           if-no-files-found: error
+
+  release:
+    name: Publish release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Checksums
+        working-directory: dist
+        run: |
+          sha256sum Sayvane-* > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+
+      - name: Create or update the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/* --clobber
+          else
+            gh release create "$TAG" dist/* --title "Sayvane $TAG" --generate-notes --latest
+          fi

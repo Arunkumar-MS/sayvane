@@ -9,17 +9,27 @@
   "redirects": [
     {
       "source": "/download/mac-arm",
-      "destination": "https://github.com/Arunkumar-MS/sayvane/releases/latest",
+      "destination": "https://github.com/Arunkumar-MS/sayvane/releases/latest/download/Sayvane-macOS-AppleSilicon.dmg",
       "permanent": false
     },
     {
       "source": "/download/mac-intel",
-      "destination": "https://github.com/Arunkumar-MS/sayvane/releases/latest",
+      "destination": "https://github.com/Arunkumar-MS/sayvane/releases/latest/download/Sayvane-macOS-Intel.dmg",
       "permanent": false
     },
     {
       "source": "/download/windows",
-      "destination": "https://github.com/Arunkumar-MS/sayvane/releases/latest",
+      "destination": "https://github.com/Arunkumar-MS/sayvane/releases/latest/download/Sayvane-Windows-x64-Setup.exe",
+      "permanent": false
+    },
+    {
+      "source": "/download/checksums",
+      "destination": "https://github.com/Arunkumar-MS/sayvane/releases/latest/download/SHA256SUMS.txt",
+      "permanent": false
+    },
+    {
+      "source": "/releases",
+      "destination": "https://github.com/Arunkumar-MS/sayvane/releases",
       "permanent": false
     }
   ],

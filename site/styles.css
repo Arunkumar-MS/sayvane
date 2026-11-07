@@ -439,6 +439,9 @@ kbd {
 .platform h3 { margin-top: 18px; font-size: 44px; letter-spacing: -0.04em; }
 .platform > p { margin-top: 10px; color: var(--text-2); font-size: 15px; max-width: 380px; }
 .platform-actions { position: relative; z-index: 1; margin: 28px 0 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+.dl-meta { margin-top: 28px; font-size: 14px; color: var(--text-3); text-align: center; }
+.dl-meta a { color: var(--text-2); }
+.dl-meta a:hover { color: var(--text); }
 .plat-badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; color: var(--text-2); border: 1px solid var(--line-strong); }
 .platform.is-yours { border-color: rgba(232, 87, 58, 0.5); box-shadow: 0 0 80px -30px rgba(232, 87, 58, 0.6); }
 .platform.is-yours .plat-badge::after { content: " · your computer"; color: var(--accent-text); }

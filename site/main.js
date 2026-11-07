@@ -16,6 +16,31 @@
     document.querySelectorAll("[data-os-label]").forEach((el) => (el.textContent = label));
     document.querySelector(`[data-platform="${os}"]`)?.classList.add("is-yours");
   }
+  // Main buttons download the right installer directly when the platform is certain;
+  // otherwise they scroll to the download cards.
+  const setDirect = (href) => document.querySelectorAll("[data-os-cta]").forEach((a) => (a.href = href));
+  if (os === "windows") setDirect("/download/windows");
+  if (os === "mac") {
+    macArch().then((arch) => {
+      if (arch === "arm") setDirect("/download/mac-arm");
+      else if (arch === "intel") setDirect("/download/mac-intel");
+    });
+  }
+  async function macArch() {
+    try {
+      const hints = await navigator.userAgentData?.getHighEntropyValues?.(["architecture"]);
+      if (hints?.architecture === "arm") return "arm";
+      if (hints?.architecture === "x86") return "intel";
+    } catch {}
+    try {
+      const gl = document.createElement("canvas").getContext("webgl");
+      const ext = gl?.getExtension("WEBGL_debug_renderer_info");
+      const gpu = ext ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : "";
+      if (/Apple M\d/i.test(gpu)) return "arm";
+      if (/Intel|AMD|Radeon/i.test(gpu)) return "intel";
+    } catch {}
+    return null;
+  }
 
   // ---------- Mobile menu ----------
   const toggle = document.querySelector(".menu-toggle");
