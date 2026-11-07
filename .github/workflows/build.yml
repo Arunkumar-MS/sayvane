@@ -192,6 +192,11 @@ jobs:
         working-directory: src-tauri
         run: cargo test --locked --target ${{ matrix.target }}
 
+      # Spotlight indexing a freshly mounted DMG is what keeps it from ejecting.
+      - name: Disable Spotlight indexing (macOS)
+        if: runner.os == 'macOS'
+        run: sudo mdutil -a -i off || true
+
       - name: Package
         shell: bash
         run: |
@@ -201,7 +206,16 @@ jobs:
             echo '{"version":"${{ needs.version.outputs.version }}"}' > release-version.json
             args="--config release-version.json"
           fi
-          pnpm tauri build --target ${{ matrix.target }} --bundles ${{ matrix.bundles }} $args
+          # macOS runners occasionally fail to eject the DMG disk image ("Resource busy")
+          # while it is being built. That is not a code problem, so retry macOS packaging.
+          # Windows packaging is never retried.
+          for attempt in 1 2 3; do
+            pnpm tauri build --target ${{ matrix.target }} --bundles ${{ matrix.bundles }} $args && break
+            if [ "${{ runner.os }}" != "macOS" ] || [ "$attempt" = "3" ]; then exit 1; fi
+            echo "::warning::Packaging attempt $attempt failed; detaching leftover disk images and retrying"
+            for d in $(hdiutil info | grep -o '^/dev/disk[0-9]*' | sort -u); do hdiutil detach -force "$d" || true; done
+            sleep 10
+          done
 
       - name: Verify bundle architecture
         shell: bash
