@@ -1,0 +1,9 @@
+node_modules/
+ui/dist/
+src-tauri/target/
+src-tauri/gen/
+src-tauri/binaries/*
+!src-tauri/binaries/.gitkeep
+speech-worker/build/
+.DS_Store
+*.log

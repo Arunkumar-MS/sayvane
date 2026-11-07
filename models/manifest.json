@@ -1,0 +1,93 @@
+{
+  "manifestVersion": 1,
+  "engineVersion": "1.9.5",
+  "models": [
+    {
+      "id": "tiny",
+      "label": "Fastest",
+      "description": "Smallest and quickest model for many languages; lowest accuracy.",
+      "fileName": "ggml-tiny.bin",
+      "url": "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin",
+      "sizeBytes": 77691713,
+      "sha256": "be07e048e1e599ad46341c8d2a135645097a538221678b7acdd1b1919c6e1b21",
+      "format": "ggml",
+      "multilingual": true,
+      "canTranslate": true,
+      "languages": "multilingual",
+      "recommendedMinMemoryGb": 2,
+      "license": "MIT",
+      "licenseUrl": "https://github.com/openai/whisper/blob/main/LICENSE",
+      "isDefault": false
+    },
+    {
+      "id": "base",
+      "label": "Balanced",
+      "description": "A good mix of speed and accuracy for many languages; works well on most computers.",
+      "fileName": "ggml-base.bin",
+      "url": "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin",
+      "sizeBytes": 147951465,
+      "sha256": "60ed5bc3dd14eea856493d334349b405782ddcaf0028d4b5df4088345fba2efe",
+      "format": "ggml",
+      "multilingual": true,
+      "canTranslate": true,
+      "languages": "multilingual",
+      "recommendedMinMemoryGb": 4,
+      "license": "MIT",
+      "licenseUrl": "https://github.com/openai/whisper/blob/main/LICENSE",
+      "isDefault": true
+    },
+    {
+      "id": "small",
+      "label": "More accurate",
+      "description": "Noticeably more accurate across languages, using more memory and time.",
+      "fileName": "ggml-small.bin",
+      "url": "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.bin",
+      "sizeBytes": 487601967,
+      "sha256": "1be3a9b2063867b937e64e2ec7483364a79917e157fa98c5d94b5c1fffea987b",
+      "format": "ggml",
+      "multilingual": true,
+      "canTranslate": true,
+      "languages": "multilingual",
+      "recommendedMinMemoryGb": 8,
+      "license": "MIT",
+      "licenseUrl": "https://github.com/openai/whisper/blob/main/LICENSE",
+      "isDefault": false
+    },
+    {
+      "id": "large-v3-turbo",
+      "label": "High accuracy",
+      "description": "Highest accuracy for many languages on capable computers; transcribes only and cannot translate to English.",
+      "fileName": "ggml-large-v3-turbo.bin",
+      "url": "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo.bin",
+      "sizeBytes": 1624555275,
+      "sha256": "1fc70f774d38eb169993ac391eea357ef47c88757ef72ee5943879b7e8e2bc69",
+      "format": "ggml",
+      "multilingual": true,
+      "canTranslate": false,
+      "languages": "multilingual",
+      "recommendedMinMemoryGb": 16,
+      "license": "MIT",
+      "licenseUrl": "https://github.com/openai/whisper/blob/main/LICENSE",
+      "isDefault": false
+    },
+    {
+      "id": "tiny.en",
+      "label": "English fast",
+      "description": "Very fast model for English speech only; cannot translate.",
+      "fileName": "ggml-tiny.en.bin",
+      "url": "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.en.bin",
+      "sizeBytes": 77704715,
+      "sha256": "921e4cf8686fdd993dcd081a5da5b6c365bfde1162e72b08d75ac75289920b1f",
+      "format": "ggml",
+      "multilingual": false,
+      "canTranslate": false,
+      "languages": [
+        "en"
+      ],
+      "recommendedMinMemoryGb": 2,
+      "license": "MIT",
+      "licenseUrl": "https://github.com/openai/whisper/blob/main/LICENSE",
+      "isDefault": false
+    }
+  ]
+}

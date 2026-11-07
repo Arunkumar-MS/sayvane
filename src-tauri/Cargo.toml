@@ -1,0 +1,86 @@
+[package]
+name = "sayvane"
+version = "0.1.0"
+description = "Local-first dictation for macOS and Windows"
+edition = "2021"
+rust-version = "1.89"
+license = "UNLICENSED"
+publish = false
+
+[lib]
+name = "sayvane_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "=2.7.4", features = [] }
+serde_json = "1.0.154"
+
+[dependencies]
+tauri = { version = "=2.12.5", features = ["tray-icon", "image-png", "macos-private-api"] }
+tauri-plugin-global-shortcut = "=2.4.1"
+tauri-plugin-single-instance = "=2.5.5"
+tauri-plugin-dialog = "=2.8.4"
+tauri-plugin-opener = "=2.7.2"
+tauri-plugin-autostart = "=2.7.0"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+uuid = { version = "1.29.1", features = ["v4", "serde"] }
+chrono = { version = "0.4.45", default-features = false, features = ["clock", "serde", "std"] }
+sha2 = "0.11.1"
+thiserror = "2.0.21"
+parking_lot = "0.13.0"
+log = "0.4.35"
+env_logger = { version = "0.11", default-features = false, features = ["auto-color", "humantime"] }
+rusqlite = { version = "0.41.1", features = ["bundled"] }
+# cpal 0.16+ raised the CoreAudio minimum to macOS 14.2; 0.15.3 keeps the macOS 13 target.
+cpal = "=0.15.3"
+hound = "3.5.1"
+# 0.5 line: stable, documented decoding API. Formats verified: WAV, MP3, M4A/AAC, ALAC, FLAC, OGG/Vorbis.
+symphonia = { version = "0.5.5", features = ["mp3", "aac", "isomp4", "alac"] }
+# native-tls uses the OS trust store (Security.framework / SChannel), as required for org gateways.
+reqwest = { version = "0.13.5", default-features = false, features = ["native-tls", "json", "http2", "charset", "system-proxy", "stream"] }
+tokio = { version = "1.54.1", features = ["sync", "time", "rt", "rt-multi-thread", "macros", "fs", "io-util", "net"] }
+url = "2.5.8"
+keyring = "4.2.0"
+futures-util = "0.3"
+fs4 = "1.1.0"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6.5"
+objc2-foundation = "0.3.2"
+objc2-app-kit = "0.3.2"
+core-graphics = "0.25.0"
+core-foundation = "0.10.1"
+accessibility-sys = "0.2.0"
+tauri-nspanel = "2.1.1"
+block2 = "0.6.2"
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.62.2", features = [
+  "Win32_Foundation",
+  "Win32_System_Com",
+  "Win32_System_DataExchange",
+  "Win32_System_Memory",
+  "Win32_System_Ole",
+  "Win32_System_Threading",
+  "Win32_System_JobObjects",
+  "Win32_System_Power",
+  "Win32_System_RemoteDesktop",
+  "Win32_Security",
+  "Win32_System_Registry",
+  "Win32_System_StationsAndDesktops",
+  "Win32_UI_Accessibility",
+  "Win32_UI_Input_KeyboardAndMouse",
+  "Win32_UI_WindowsAndMessaging",
+  "Win32_UI_Shell",
+  "Win32_Media_Audio",
+] }
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+lto = "thin"
+codegen-units = 4
+strip = "symbols"
+panic = "unwind"

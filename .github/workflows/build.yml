@@ -1,0 +1,119 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: macOS Apple Silicon
+            runner: macos-15
+            target: aarch64-apple-darwin
+            bundles: app,dmg
+            arch: arm64
+          - name: macOS Intel
+            runner: macos-15-intel
+            target: x86_64-apple-darwin
+            bundles: app,dmg
+            arch: x86_64
+          - name: Windows x64
+            runner: windows-2022
+            target: x86_64-pc-windows-msvc
+            bundles: nsis
+            arch: x64
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.runner }}
+    env:
+      MACOSX_DEPLOYMENT_TARGET: "13.0"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.18.0
+          cache: pnpm
+
+      - name: Rust toolchain
+        run: |
+          rustup toolchain install 1.99.1 --profile minimal --target ${{ matrix.target }}
+          rustup default 1.99.1
+
+      - name: Build speech worker (macOS)
+        if: runner.os == 'macOS'
+        run: scripts/build-worker.sh ${{ matrix.target }}
+      - name: Build speech worker (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: scripts/build-worker.ps1
+
+      - name: Verify worker architecture
+        shell: bash
+        run: |
+          f=$(ls src-tauri/binaries/sayvane-speech-${{ matrix.target }}*)
+          file "$f"
+          if [ "${{ runner.os }}" = "macOS" ]; then
+            test "$(lipo -archs "$f")" = "${{ matrix.arch }}"
+            otool -l "$f" | grep -A3 LC_BUILD_VERSION | grep -q "minos 13.0"
+          else
+            file "$f" | grep -q "x86-64"
+          fi
+
+      - name: Worker smoke test (real model)
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/models"
+          url=$(python3 -c "import json;m=[x for x in json.load(open('models/manifest.json'))['models'] if x['id']=='tiny.en'][0];print(m['url'])")
+          sha=$(python3 -c "import json;m=[x for x in json.load(open('models/manifest.json'))['models'] if x['id']=='tiny.en'][0];print(m['sha256'])")
+          curl -sSL -o "$RUNNER_TEMP/models/tiny.en.bin" "$url"
+          python3 -c "import hashlib,sys;h=hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest();assert h==sys.argv[2],h" "$RUNNER_TEMP/models/tiny.en.bin" "$sha"
+          python3 -I speech-worker/tests/smoke.py --worker "$(ls src-tauri/binaries/sayvane-speech-${{ matrix.target }}*)" --model "$RUNNER_TEMP/models/tiny.en.bin"
+          echo "SAYVANE_TEST_MODEL=$RUNNER_TEMP/models/tiny.en.bin" >> "$GITHUB_ENV"
+
+      - run: pnpm install --frozen-lockfile
+      - run: node scripts/generate-branding/index.mjs
+      - run: pnpm test
+      - run: pnpm build
+
+      - name: Core tests
+        working-directory: src-tauri
+        run: cargo test --locked --target ${{ matrix.target }}
+
+      - name: Package
+        run: pnpm tauri build --target ${{ matrix.target }} --bundles ${{ matrix.bundles }}
+
+      - name: Verify bundle architecture
+        shell: bash
+        run: |
+          base=src-tauri/target/${{ matrix.target }}/release
+          if [ "${{ runner.os }}" = "macOS" ]; then
+            app=$(ls -d $base/bundle/macos/*.app)
+            for bin in "$app"/Contents/MacOS/*; do
+              echo "$bin: $(lipo -archs "$bin")"
+              test "$(lipo -archs "$bin")" = "${{ matrix.arch }}"
+            done
+            # No development-machine paths or Homebrew libraries may leak into the bundle.
+            ! otool -L "$app"/Contents/MacOS/* | grep -E "/usr/local|/opt/homebrew|/Users/"
+          else
+            ls $base/bundle/nsis/
+            file $base/*.exe | tee /dev/stderr | grep -q "x86-64"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sayvane-${{ matrix.target }}
+          path: |
+            src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg
+            src-tauri/target/${{ matrix.target }}/release/bundle/nsis/*.exe
+          if-no-files-found: error

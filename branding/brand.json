@@ -1,0 +1,12 @@
+{
+  "displayName": "Sayvane",
+  "productSlug": "sayvane",
+  "publisher": "Sayvane",
+  "applicationId": "app.sayvane.desktop",
+  "storageNamespace": "app.sayvane.desktop",
+  "tagline": "Speak where you type",
+  "accentColor": "#E8573A",
+  "iconSource": "branding/icon.svg",
+  "supportUrl": null,
+  "privacyUrl": null
+}
