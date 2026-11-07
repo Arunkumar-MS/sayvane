@@ -42,7 +42,9 @@ jobs:
           if [ "${{ github.ref }}" = "refs/heads/main" ] && [ "${{ github.event_name }}" != "pull_request" ]; then
             release=true
           fi
-          case "$COMMIT_MESSAGE" in *"[skip release]"*) release=false ;; esac
+          # Only the subject line counts, so a body that merely mentions the token is safe.
+          subject=$(printf '%s' "$COMMIT_MESSAGE" | head -n1)
+          case "$subject" in *"[skip release]"*) release=false ;; esac
 
           # Bump the patch of the newest tag. Raising "version" in tauri.conf.json past
           # the newest tag (for example to 0.2.0) releases exactly that version instead.
@@ -87,6 +89,7 @@ jobs:
             asset: Sayvane-Windows-x64-Setup.exe
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
     env:
       MACOSX_DEPLOYMENT_TARGET: "13.0"
     steps:
@@ -105,13 +108,35 @@ jobs:
           rustup toolchain install 1.99.1 --profile minimal --target ${{ matrix.target }}
           rustup default 1.99.1
 
+      # Compiled Rust dependencies are the bulk of the build time. Only main saves the
+      # cache; pull requests restore it.
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+          key: ${{ matrix.target }}
+          cache-on-failure: true
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+
+      # The speech engine only changes when its sources or build scripts do.
+      - name: Cache speech worker
+        id: worker-cache
+        uses: actions/cache@v5
+        with:
+          path: src-tauri/binaries/sayvane-speech-${{ matrix.target }}*
+          key: worker-${{ matrix.target }}-${{ hashFiles('speech-worker/**', 'scripts/build-worker.*') }}
       - name: Build speech worker (macOS)
-        if: runner.os == 'macOS'
+        if: runner.os == 'macOS' && steps.worker-cache.outputs.cache-hit != 'true'
         run: scripts/build-worker.sh ${{ matrix.target }}
       - name: Build speech worker (Windows)
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && steps.worker-cache.outputs.cache-hit != 'true'
         shell: pwsh
         run: scripts/build-worker.ps1
+
+      - name: Cache test model
+        uses: actions/cache@v5
+        with:
+          path: ${{ runner.temp }}/models
+          key: model-tiny.en-${{ hashFiles('models/manifest.json') }}
 
       - name: Verify worker architecture
         shell: bash
@@ -131,7 +156,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/models"
           url=$(python3 -c "import json;m=[x for x in json.load(open('models/manifest.json'))['models'] if x['id']=='tiny.en'][0];print(m['url'])")
           sha=$(python3 -c "import json;m=[x for x in json.load(open('models/manifest.json'))['models'] if x['id']=='tiny.en'][0];print(m['sha256'])")
-          curl -sSL -o "$RUNNER_TEMP/models/tiny.en.bin" "$url"
+          [ -s "$RUNNER_TEMP/models/tiny.en.bin" ] || curl -sSL -o "$RUNNER_TEMP/models/tiny.en.bin" "$url"
           python3 -c "import hashlib,sys;h=hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest();assert h==sys.argv[2],h" "$RUNNER_TEMP/models/tiny.en.bin" "$sha"
           python3 -I speech-worker/tests/smoke.py --worker "$(ls src-tauri/binaries/sayvane-speech-${{ matrix.target }}*)" --model "$RUNNER_TEMP/models/tiny.en.bin"
           echo "SAYVANE_TEST_MODEL=$RUNNER_TEMP/models/tiny.en.bin" >> "$GITHUB_ENV"
@@ -169,8 +194,20 @@ jobs:
             # No development-machine paths or Homebrew libraries may leak into the bundle.
             ! otool -L "$app"/Contents/MacOS/* | grep -E "/usr/local|/opt/homebrew|/Users/"
           else
-            ls $base/bundle/nsis/
-            file $base/*.exe | tee /dev/stderr | grep -q "x86-64"
+            ls -l $base/bundle/nsis/
+            python3 - "$base" <<'PY'
+          import glob, struct, sys
+          exes = glob.glob(sys.argv[1] + "/*.exe")
+          assert exes, "no .exe found in " + sys.argv[1]
+          for path in exes:
+              with open(path, "rb") as f:
+                  data = f.read(4096)
+              offset = struct.unpack_from("<I", data, 0x3C)[0]
+              assert data[offset:offset + 4] == b"PE\0\0", path + " is not a PE file"
+              machine = struct.unpack_from("<H", data, offset + 4)[0]
+              print(path, hex(machine))
+              assert machine == 0x8664, path + " is not x86-64"
+          PY
           fi
 
       # Fixed file names let the website link to releases/latest/download/<name>,
@@ -193,6 +230,7 @@ jobs:
         with:
           name: ${{ matrix.asset }}
           path: dist/${{ matrix.asset }}
+          compression-level: 0
           if-no-files-found: error
 
   release:
